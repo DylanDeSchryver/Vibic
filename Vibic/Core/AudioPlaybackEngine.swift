@@ -334,6 +334,14 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         if let track = currentTrack {
             nowPlayingInfo[MPMediaItemPropertyTitle] = track.title ?? "Unknown"
             nowPlayingInfo[MPMediaItemPropertyArtist] = track.artist ?? "Unknown Artist"
+            
+            // Add artwork for lock screen, control center, and Dynamic Island
+            if let artworkImage = track.artworkImage {
+                let artwork = MPMediaItemArtwork(boundsSize: artworkImage.size) { _ in
+                    return artworkImage
+                }
+                nowPlayingInfo[MPMediaItemPropertyArtwork] = artwork
+            }
         }
         
         nowPlayingInfo[MPMediaItemPropertyPlaybackDuration] = duration
