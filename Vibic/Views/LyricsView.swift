@@ -5,6 +5,16 @@ struct LyricsView: View {
     @StateObject private var lyricsService = LyricsService.shared
     @State private var currentLineIndex: Int? = nil
     @Namespace private var scrollNamespace
+    @AppStorage("lyricsAutoScroll") private var lyricsAutoScroll = true
+    @AppStorage("lyricsFontSize") private var lyricsFontSize = 1
+    
+    private var lyricFont: Font {
+        switch lyricsFontSize {
+        case 0: return .title3
+        case 2: return .largeTitle
+        default: return .title2
+        }
+    }
     
     var body: some View {
         NavigationStack {
@@ -85,7 +95,8 @@ struct LyricsView: View {
                         SyncedLyricLineView(
                             line: line,
                             isCurrentLine: index == currentLineIndex,
-                            isPastLine: currentLineIndex != nil && index < currentLineIndex!
+                            isPastLine: currentLineIndex != nil && index < currentLineIndex!,
+                            font: lyricFont
                         )
                         .id(index)
                         .onTapGesture {
@@ -103,7 +114,7 @@ struct LyricsView: View {
             }
             .scrollIndicators(.hidden)
             .onChange(of: currentLineIndex) { _, newIndex in
-                if let index = newIndex {
+                if lyricsAutoScroll, let index = newIndex {
                     withAnimation(.easeInOut(duration: 0.3)) {
                         proxy.scrollTo(index, anchor: .center)
                     }
@@ -124,7 +135,7 @@ struct LyricsView: View {
                     .padding(.bottom, 16)
                 
                 Text(lyrics)
-                    .font(.title2)
+                    .font(lyricFont)
                     .fontWeight(.semibold)
                     .foregroundStyle(.primary.opacity(0.9))
                     .lineSpacing(8)
@@ -222,10 +233,11 @@ struct SyncedLyricLineView: View {
     let line: LyricLine
     let isCurrentLine: Bool
     let isPastLine: Bool
+    var font: Font = .title2
     
     var body: some View {
         Text(line.text)
-            .font(.title2)
+            .font(font)
             .fontWeight(isCurrentLine ? .bold : .semibold)
             .foregroundStyle(textColor)
             .lineSpacing(4)

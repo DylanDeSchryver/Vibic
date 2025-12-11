@@ -11,6 +11,7 @@ struct ContentView: View {
         case playlists
         case lyrics
         case files
+        case settings
     }
     
     var body: some View {
@@ -39,6 +40,12 @@ struct ContentView: View {
                         Label("Files", systemImage: "folder")
                     }
                     .tag(Tab.files)
+                
+                SettingsView()
+                    .tabItem {
+                        Label("Settings", systemImage: "gearshape")
+                    }
+                    .tag(Tab.settings)
             }
             
             if playbackEngine.currentTrack != nil {

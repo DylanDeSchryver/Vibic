@@ -33,12 +33,23 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         case one
     }
     
+    // MARK: - Playback Settings
+    
+    var gaplessPlayback = true
+    var crossfadeEnabled = false
+    var crossfadeDuration: Double = 3.0
+    private var crossfadeTimer: Timer?
+    private var nextAudioPlayer: AVAudioPlayer?
+    private var isCrossfading = false
+    private var crossfadeStartTime: Date?
+    
     // MARK: - Initialization
     
     private override init() {
         super.init()
         setupRemoteCommandCenter()
         setupAudioSession()
+        loadSettingsFromDefaults()
     }
     
     deinit {
@@ -103,6 +114,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     }
     
     func stop() {
+        cancelCrossfade()
         audioPlayer?.stop()
         audioPlayer = nil
         isPlaying = false
@@ -150,6 +162,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     
     func playNext() {
         guard !queue.isEmpty else { return }
+        cancelCrossfade()
         
         if repeatMode == .one {
             seek(to: 0)
@@ -177,6 +190,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     
     func playPrevious() {
         guard !queue.isEmpty else { return }
+        cancelCrossfade()
         
         if currentTime > 3 {
             seek(to: 0)
@@ -232,6 +246,26 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         }
     }
     
+    func setDefaultRepeatMode(_ mode: Int) {
+        switch mode {
+        case 1:
+            repeatMode = .all
+        case 2:
+            repeatMode = .one
+        default:
+            repeatMode = .none
+        }
+    }
+    
+    func loadSettingsFromDefaults() {
+        let defaults = UserDefaults.standard
+        gaplessPlayback = defaults.bool(forKey: "gaplessPlayback")
+        crossfadeEnabled = defaults.bool(forKey: "crossfadeEnabled")
+        crossfadeDuration = defaults.double(forKey: "crossfadeDuration")
+        if crossfadeDuration == 0 { crossfadeDuration = 3.0 }
+        setDefaultRepeatMode(defaults.integer(forKey: "defaultRepeatMode"))
+    }
+    
     func addToQueue(_ track: Track) {
         queue.append(track)
         originalQueue.append(track)
@@ -279,6 +313,108 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     @objc private func updatePlaybackTime() {
         guard let player = audioPlayer else { return }
         currentTime = player.currentTime
+        
+        // Check for crossfade
+        if crossfadeEnabled && !isCrossfading && duration > 0 {
+            let timeRemaining = duration - currentTime
+            if timeRemaining <= crossfadeDuration && timeRemaining > 0 {
+                startCrossfade()
+            }
+        }
+        
+        // Update crossfade volumes
+        if isCrossfading, let startTime = crossfadeStartTime {
+            updateCrossfadeVolumes(startTime: startTime)
+        }
+    }
+    
+    // MARK: - Crossfade
+    
+    private func startCrossfade() {
+        guard !isCrossfading else { return }
+        guard let nextTrack = getNextTrackForCrossfade() else { return }
+        guard let filePath = nextTrack.filePath else { return }
+        
+        let fileURL = URL(fileURLWithPath: filePath)
+        
+        do {
+            nextAudioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+            nextAudioPlayer?.prepareToPlay()
+            nextAudioPlayer?.volume = 0
+            nextAudioPlayer?.play()
+            
+            isCrossfading = true
+            crossfadeStartTime = Date()
+        } catch {
+            print("Failed to prepare next track for crossfade: \(error)")
+        }
+    }
+    
+    private func getNextTrackForCrossfade() -> Track? {
+        guard !queue.isEmpty else { return nil }
+        
+        if repeatMode == .one {
+            return currentTrack
+        }
+        
+        let nextIndex = currentIndex + 1
+        if nextIndex >= queue.count {
+            if repeatMode == .all {
+                return queue[0]
+            }
+            return nil
+        }
+        return queue[nextIndex]
+    }
+    
+    private func updateCrossfadeVolumes(startTime: Date) {
+        let elapsed = Date().timeIntervalSince(startTime)
+        let progress = min(elapsed / crossfadeDuration, 1.0)
+        
+        // Fade out current, fade in next
+        audioPlayer?.volume = Float(1.0 - progress) * volume
+        nextAudioPlayer?.volume = Float(progress) * volume
+        
+        // Crossfade complete
+        if progress >= 1.0 {
+            completeCrossfade()
+        }
+    }
+    
+    private func completeCrossfade() {
+        audioPlayer?.stop()
+        audioPlayer = nextAudioPlayer
+        audioPlayer?.volume = volume
+        nextAudioPlayer = nil
+        isCrossfading = false
+        crossfadeStartTime = nil
+        
+        // Update track info
+        if repeatMode == .one {
+            // Stay on same track, just restart
+            currentTime = 0
+        } else {
+            let nextIndex = currentIndex + 1
+            if nextIndex >= queue.count {
+                if repeatMode == .all {
+                    currentIndex = 0
+                }
+            } else {
+                currentIndex = nextIndex
+            }
+            currentTrack = queue[currentIndex]
+        }
+        
+        duration = audioPlayer?.duration ?? 0
+        updateNowPlayingInfo()
+    }
+    
+    private func cancelCrossfade() {
+        nextAudioPlayer?.stop()
+        nextAudioPlayer = nil
+        isCrossfading = false
+        crossfadeStartTime = nil
+        audioPlayer?.volume = volume
     }
     
     // MARK: - Remote Command Center
@@ -369,6 +505,11 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
 
 extension AudioPlaybackEngine: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        // If crossfade handled the transition, don't trigger playNext
+        if isCrossfading || player === nextAudioPlayer {
+            return
+        }
+        
         if flag {
             DispatchQueue.main.async { [weak self] in
                 self?.playNext()
