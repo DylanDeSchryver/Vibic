@@ -14,7 +14,7 @@ struct ContentView: View {
     }
     
     var body: some View {
-        ZStack(alignment: .bottom) {
+        VStack(spacing: 0) {
             TabView(selection: $selectedTab) {
                 LibraryView()
                     .tabItem {
@@ -40,16 +40,13 @@ struct ContentView: View {
                     }
                     .tag(Tab.files)
             }
-            .padding(.bottom, playbackEngine.currentTrack != nil ? 60 : 0)
             
             if playbackEngine.currentTrack != nil {
-                VStack(spacing: 0) {
-                    Spacer()
-                    MiniPlayerView(showingPlayer: $showingPlayer)
-                        .padding(.bottom, 49)
-                }
+                MiniPlayerView(showingPlayer: $showingPlayer)
+                    .background(Color(.systemBackground))
             }
         }
+        .ignoresSafeArea(.keyboard)
         .sheet(isPresented: $showingPlayer) {
             PlayerView()
         }

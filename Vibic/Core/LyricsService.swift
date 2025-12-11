@@ -40,8 +40,11 @@ final class LyricsService: ObservableObject {
             self.currentLyrics = nil
         }
         
-        // Try multiple sources
-        if let lyrics = await fetchFromLyricsOvh(title: title, artist: artist ?? "Unknown") {
+        let cleanedTitle = cleanTitle(title)
+        let searchArtist = artist ?? "Unknown"
+        
+        // Try LRCLIB first (better coverage)
+        if let lyrics = await fetchFromLrclib(title: title, artist: searchArtist) {
             cache[cacheKey] = lyrics
             await MainActor.run {
                 self.currentLyrics = lyrics
@@ -50,10 +53,31 @@ final class LyricsService: ObservableObject {
             return
         }
         
-        // Try alternate search with cleaned title
-        let cleanedTitle = cleanTitle(title)
+        // Try with cleaned title
         if cleanedTitle != title {
-            if let lyrics = await fetchFromLyricsOvh(title: cleanedTitle, artist: artist ?? "Unknown") {
+            if let lyrics = await fetchFromLrclib(title: cleanedTitle, artist: searchArtist) {
+                cache[cacheKey] = lyrics
+                await MainActor.run {
+                    self.currentLyrics = lyrics
+                    self.isLoading = false
+                }
+                return
+            }
+        }
+        
+        // Fallback to lyrics.ovh
+        if let lyrics = await fetchFromLyricsOvh(title: title, artist: searchArtist) {
+            cache[cacheKey] = lyrics
+            await MainActor.run {
+                self.currentLyrics = lyrics
+                self.isLoading = false
+            }
+            return
+        }
+        
+        // Try lyrics.ovh with cleaned title
+        if cleanedTitle != title {
+            if let lyrics = await fetchFromLyricsOvh(title: cleanedTitle, artist: searchArtist) {
                 cache[cacheKey] = lyrics
                 await MainActor.run {
                     self.currentLyrics = lyrics
@@ -66,6 +90,40 @@ final class LyricsService: ObservableObject {
         await MainActor.run {
             self.isLoading = false
             self.error = "Lyrics not found"
+        }
+    }
+    
+    private func fetchFromLrclib(title: String, artist: String) async -> String? {
+        var components = URLComponents(string: "https://lrclib.net/api/get")
+        components?.queryItems = [
+            URLQueryItem(name: "track_name", value: title),
+            URLQueryItem(name: "artist_name", value: artist)
+        ]
+        
+        guard let url = components?.url else { return nil }
+        
+        var request = URLRequest(url: url)
+        request.setValue("Vibic/1.0", forHTTPHeaderField: "User-Agent")
+        
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse,
+                  httpResponse.statusCode == 200 else {
+                return nil
+            }
+            
+            let result = try JSONDecoder().decode(LrclibResponse.self, from: data)
+            // Prefer plain lyrics, fall back to synced lyrics stripped of timestamps
+            if let plainLyrics = result.plainLyrics, !plainLyrics.isEmpty {
+                return cleanLyrics(plainLyrics)
+            } else if let syncedLyrics = result.syncedLyrics, !syncedLyrics.isEmpty {
+                return cleanLyrics(stripTimestamps(syncedLyrics))
+            }
+            return nil
+        } catch {
+            print("LRCLIB fetch error: \(error)")
+            return nil
         }
     }
     
@@ -88,9 +146,29 @@ final class LyricsService: ObservableObject {
             let result = try JSONDecoder().decode(LyricsResponse.self, from: data)
             return cleanLyrics(result.lyrics)
         } catch {
-            print("Lyrics fetch error: \(error)")
+            print("Lyrics.ovh fetch error: \(error)")
             return nil
         }
+    }
+    
+    private func stripTimestamps(_ syncedLyrics: String) -> String {
+        let lines = syncedLyrics.components(separatedBy: "\n")
+        var result: [String] = []
+        
+        for line in lines {
+            // Remove [mm:ss.xx] timestamps
+            if let regex = try? NSRegularExpression(pattern: "^\\[\\d{2}:\\d{2}\\.\\d{2}\\]\\s*", options: []) {
+                let range = NSRange(line.startIndex..., in: line)
+                let cleaned = regex.stringByReplacingMatches(in: line, options: [], range: range, withTemplate: "")
+                if !cleaned.isEmpty {
+                    result.append(cleaned)
+                }
+            } else {
+                result.append(line)
+            }
+        }
+        
+        return result.joined(separator: "\n")
     }
     
     private func cleanTitle(_ title: String) -> String {
@@ -140,4 +218,9 @@ final class LyricsService: ObservableObject {
 
 struct LyricsResponse: Codable {
     let lyrics: String
+}
+
+struct LrclibResponse: Codable {
+    let plainLyrics: String?
+    let syncedLyrics: String?
 }
