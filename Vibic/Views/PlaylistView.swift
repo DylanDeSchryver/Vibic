@@ -111,7 +111,32 @@ struct PlaylistView: View {
 }
 
 struct PlaylistRowView: View {
-    let playlist: Playlist
+    @ObservedObject var playlist: Playlist
+    @EnvironmentObject var libraryController: LibraryController
+    
+    var trackCount: Int {
+        libraryController.getPlaylistTracks(playlist).count
+    }
+    
+    var totalDuration: String {
+        let tracks = libraryController.getPlaylistTracks(playlist)
+        let total = tracks.reduce(0) { $0 + $1.duration }
+        if total >= 3600 {
+            let hours = Int(total) / 3600
+            let minutes = (Int(total) % 3600) / 60
+            return "\(hours)h \(minutes)m"
+        } else {
+            let minutes = Int(total) / 60
+            let seconds = Int(total) % 60
+            return String(format: "%d:%02d", minutes, seconds)
+        }
+    }
+    
+    var subtitle: String {
+        let count = trackCount
+        let trackText = count == 1 ? "track" : "tracks"
+        return "\(count) \(trackText) • \(totalDuration)"
+    }
     
     var body: some View {
         HStack(spacing: 12) {
@@ -130,7 +155,7 @@ struct PlaylistRowView: View {
                     .fontWeight(.medium)
                     .lineLimit(1)
                 
-                Text(playlist.subtitle)
+                Text(subtitle)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -161,8 +186,11 @@ struct PlaylistDetailView: View {
                                 playbackEngine.playTrack(firstTrack, in: tracks)
                             }
                         } label: {
-                            Label("Play", systemImage: "play.fill")
-                                .frame(maxWidth: .infinity)
+                            HStack {
+                                Spacer()
+                                Label("Play", systemImage: "play.fill")
+                                Spacer()
+                            }
                         }
                         .buttonStyle(.borderedProminent)
                         
@@ -172,8 +200,11 @@ struct PlaylistDetailView: View {
                                 playbackEngine.playTrack(firstTrack, in: shuffled)
                             }
                         } label: {
-                            Label("Shuffle", systemImage: "shuffle")
-                                .frame(maxWidth: .infinity)
+                            HStack {
+                                Spacer()
+                                Label("Shuffle", systemImage: "shuffle")
+                                Spacer()
+                            }
                         }
                         .buttonStyle(.bordered)
                     }
