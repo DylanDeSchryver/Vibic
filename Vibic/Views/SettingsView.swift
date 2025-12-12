@@ -61,16 +61,28 @@ struct SettingsView: View {
                     Text("Gapless removes silence between tracks. Crossfade smoothly blends the end of one track into the next.")
                 }
                 
-                // MARK: - Display Section
+                // MARK: - Appearance Section
                 Section {
+                    NavigationLink {
+                        ThemePickerView()
+                    } label: {
+                        HStack {
+                            Text("Theme Color")
+                            Spacer()
+                            Circle()
+                                .fill(ThemeManager.shared.accentColor)
+                                .frame(width: 24, height: 24)
+                        }
+                    }
+                    
                     Toggle("Keep Screen Awake", isOn: $keepScreenAwake)
                         .onChange(of: keepScreenAwake) { _, newValue in
                             UIApplication.shared.isIdleTimerDisabled = newValue
                         }
                 } header: {
-                    Label("Display", systemImage: "display")
+                    Label("Appearance", systemImage: "paintbrush")
                 } footer: {
-                    Text("Prevents the screen from dimming while playing music.")
+                    Text("Customize the app's accent color. Keep Screen Awake prevents dimming while playing.")
                 }
                 
                 // MARK: - Lyrics Section
@@ -229,6 +241,56 @@ struct FontSizePickerView: View {
             }
         }
         .navigationTitle("Font Size")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Theme Picker View
+
+struct ThemePickerView: View {
+    @ObservedObject private var themeManager = ThemeManager.shared
+    
+    var body: some View {
+        List {
+            Section {
+                ForEach(AppTheme.allCases, id: \.self) { theme in
+                    Button {
+                        withAnimation {
+                            themeManager.currentTheme = theme
+                        }
+                    } label: {
+                        HStack(spacing: 16) {
+                            // Color preview circle with gradient
+                            ZStack {
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: theme.gradientColors,
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 36, height: 36)
+                            }
+                            
+                            Text(theme.rawValue)
+                                .foregroundStyle(.primary)
+                            
+                            Spacer()
+                            
+                            if themeManager.currentTheme == theme {
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(theme.color)
+                                    .fontWeight(.semibold)
+                            }
+                        }
+                    }
+                }
+            } footer: {
+                Text("The accent color is used throughout the app for buttons, highlights, and the player interface.")
+            }
+        }
+        .navigationTitle("Theme Color")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

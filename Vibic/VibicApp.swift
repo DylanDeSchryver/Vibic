@@ -5,6 +5,7 @@ struct VibicApp: App {
     let coreDataManager = CoreDataManager.shared
     @StateObject private var libraryController = LibraryController.shared
     @StateObject private var playbackEngine = AudioPlaybackEngine.shared
+    @ObservedObject private var themeManager = ThemeManager.shared
     @State private var showSplash = true
     
     init() {
@@ -18,6 +19,7 @@ struct VibicApp: App {
                     .environment(\.managedObjectContext, coreDataManager.viewContext)
                     .environmentObject(libraryController)
                     .environmentObject(playbackEngine)
+                    .tint(themeManager.accentColor)
                 
                 if showSplash {
                     SplashScreenView()
