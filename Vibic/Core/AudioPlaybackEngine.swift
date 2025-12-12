@@ -395,7 +395,8 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         stopDisplayLink()
         displayLink = CADisplayLink(target: self, selector: #selector(updatePlaybackTime))
         displayLink?.preferredFrameRateRange = CAFrameRateRange(minimum: 10, maximum: 30)
-        displayLink?.add(to: .main, forMode: .common)
+        // Use .default mode so updates pause during scrolling for smoother performance
+        displayLink?.add(to: .main, forMode: .default)
     }
     
     private func stopDisplayLink() {
@@ -407,8 +408,9 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         guard let player = audioPlayer else { return }
         let newTime = player.currentTime
         
-        // Only update if time changed by more than 0.1s to reduce re-renders
-        if abs(newTime - currentTime) >= 0.1 {
+        // Only update if time changed by more than 0.25s to reduce re-renders
+        // PlayerView can interpolate for smooth progress bar
+        if abs(newTime - currentTime) >= 0.25 {
             currentTime = newTime
         }
         

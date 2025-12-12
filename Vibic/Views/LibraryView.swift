@@ -11,6 +11,13 @@ struct LibraryView: View {
     @State private var selectedTracks: Set<UUID> = []
     @State private var showingAddMultipleToPlaylist = false
     @State private var showingDeleteConfirmation = false
+    @State private var expandedSections: Set<String> = []
+    
+    private let alphabet = ["#"] + (65...90).map { String(UnicodeScalar($0)) } // # for numbers/symbols, then A-Z
+    
+    var isSearching: Bool {
+        !searchText.isEmpty
+    }
     
     var filteredTracks: [Track] {
         libraryController.searchTracks(query: searchText)
@@ -22,6 +29,36 @@ struct LibraryView: View {
             guard let id = track.id else { return false }
             return selectedTracks.contains(id)
         }
+    }
+    
+    // Group tracks by first letter
+    var groupedTracks: [String: [Track]] {
+        var groups: [String: [Track]] = [:]
+        let allTracks = libraryController.tracks.sorted { 
+            ($0.title ?? "").localizedCaseInsensitiveCompare($1.title ?? "") == .orderedAscending 
+        }
+        
+        for track in allTracks {
+            let firstChar = (track.title ?? "").prefix(1).uppercased()
+            let key: String
+            if firstChar.isEmpty || !firstChar.first!.isLetter {
+                key = "#"
+            } else {
+                key = firstChar
+            }
+            groups[key, default: []].append(track)
+        }
+        return groups
+    }
+    
+    // Get track count for a letter without loading tracks
+    func trackCount(for letter: String) -> Int {
+        groupedTracks[letter]?.count ?? 0
+    }
+    
+    // Get tracks for a specific letter (only called when section is expanded)
+    func tracks(for letter: String) -> [Track] {
+        groupedTracks[letter] ?? []
     }
     
     var body: some View {
@@ -132,96 +169,133 @@ struct LibraryView: View {
                 selectAllRow
             }
             
-            ForEach(filteredTracks, id: \.id) { track in
-                HStack(spacing: 12) {
-                    if isSelectMode {
-                        Image(systemName: isTrackSelected(track) ? "checkmark.circle.fill" : "circle")
-                            .font(.title2)
-                            .foregroundStyle(isTrackSelected(track) ? .accent : .secondary)
-                    }
-                    
-                    TrackRowView(
-                        track: track,
-                        isCurrentTrack: playbackEngine.currentTrack?.id == track.id,
-                        isPlaying: playbackEngine.isPlaying
-                    )
+            if isSearching {
+                // Show flat list when searching
+                ForEach(filteredTracks, id: \.id) { track in
+                    trackRow(for: track, in: filteredTracks)
                 }
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    if isSelectMode {
-                        toggleTrackSelection(track)
-                    } else {
-                        playbackEngine.playTrack(track, in: filteredTracks)
-                    }
-                }
-                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                    if !isSelectMode {
-                        Button(role: .destructive) {
-                            libraryController.deleteTrack(track)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
+            } else {
+                // Show alphabetical sections when not searching
+                ForEach(alphabet, id: \.self) { letter in
+                    let count = trackCount(for: letter)
+                    if count > 0 {
+                        AlphabetSection(
+                            letter: letter,
+                            trackCount: count,
+                            isExpanded: expandedSections.contains(letter),
+                            onToggle: {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    if expandedSections.contains(letter) {
+                                        expandedSections.remove(letter)
+                                    } else {
+                                        expandedSections.insert(letter)
+                                    }
+                                }
+                            }
+                        )
                         
-                        Button {
-                            selectedTrack = track
-                            showingAddToPlaylist = true
-                        } label: {
-                            Label("Add to Playlist", systemImage: "plus")
-                        }
-                        .tint(.blue)
-                    }
-                }
-                .swipeActions(edge: .leading) {
-                    if !isSelectMode {
-                        Button {
-                            selectedTrack = track
-                            showingTagEditor = true
-                        } label: {
-                            Label("Tags", systemImage: "tag")
-                        }
-                        .tint(.orange)
-                    }
-                }
-                .contextMenu {
-                    if !isSelectMode {
-                        Button {
-                            playbackEngine.playTrack(track, in: filteredTracks)
-                        } label: {
-                            Label("Play", systemImage: "play.fill")
-                        }
-                        
-                        Button {
-                            playbackEngine.addToQueue(track)
-                        } label: {
-                            Label("Add to Queue", systemImage: "text.badge.plus")
-                        }
-                        
-                        Button {
-                            selectedTrack = track
-                            showingAddToPlaylist = true
-                        } label: {
-                            Label("Add to Playlist", systemImage: "music.note.list")
-                        }
-                        
-                        Button {
-                            selectedTrack = track
-                            showingTagEditor = true
-                        } label: {
-                            Label("Edit Tags", systemImage: "tag")
-                        }
-                        
-                        Divider()
-                        
-                        Button(role: .destructive) {
-                            libraryController.deleteTrack(track)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
+                        if expandedSections.contains(letter) {
+                            let sectionTracks = tracks(for: letter)
+                            ForEach(sectionTracks, id: \.id) { track in
+                                trackRow(for: track, in: sectionTracks)
+                                    .padding(.leading, 8)
+                            }
                         }
                     }
                 }
             }
         }
         .listStyle(.plain)
+    }
+    
+    @ViewBuilder
+    private func trackRow(for track: Track, in trackList: [Track]) -> some View {
+        HStack(spacing: 12) {
+            if isSelectMode {
+                Image(systemName: isTrackSelected(track) ? "checkmark.circle.fill" : "circle")
+                    .font(.title2)
+                    .foregroundStyle(isTrackSelected(track) ? .accent : .secondary)
+            }
+            
+            TrackRowView(
+                track: track,
+                isCurrentTrack: playbackEngine.currentTrack?.id == track.id,
+                isPlaying: playbackEngine.isPlaying
+            )
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if isSelectMode {
+                toggleTrackSelection(track)
+            } else {
+                playbackEngine.playTrack(track, in: trackList)
+            }
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            if !isSelectMode {
+                Button(role: .destructive) {
+                    libraryController.deleteTrack(track)
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+                
+                Button {
+                    selectedTrack = track
+                    showingAddToPlaylist = true
+                } label: {
+                    Label("Add to Playlist", systemImage: "plus")
+                }
+                .tint(.blue)
+            }
+        }
+        .swipeActions(edge: .leading) {
+            if !isSelectMode {
+                Button {
+                    selectedTrack = track
+                    showingTagEditor = true
+                } label: {
+                    Label("Tags", systemImage: "tag")
+                }
+                .tint(.orange)
+            }
+        }
+        .contextMenu {
+            if !isSelectMode {
+                Button {
+                    playbackEngine.playTrack(track, in: trackList)
+                } label: {
+                    Label("Play", systemImage: "play.fill")
+                }
+                
+                Button {
+                    playbackEngine.addToQueue(track)
+                } label: {
+                    Label("Add to Queue", systemImage: "text.badge.plus")
+                }
+                
+                Button {
+                    selectedTrack = track
+                    showingAddToPlaylist = true
+                } label: {
+                    Label("Add to Playlist", systemImage: "music.note.list")
+                }
+                
+                Button {
+                    selectedTrack = track
+                    showingTagEditor = true
+                } label: {
+                    Label("Edit Tags", systemImage: "tag")
+                }
+                
+                Divider()
+                
+                Button(role: .destructive) {
+                    libraryController.deleteTrack(track)
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+            }
+        }
     }
     
     private var selectAllRow: some View {
@@ -254,6 +328,53 @@ struct LibraryView: View {
         } else {
             selectedTracks.insert(id)
         }
+    }
+}
+
+// MARK: - Alphabet Section
+
+struct AlphabetSection: View {
+    let letter: String
+    let trackCount: Int
+    let isExpanded: Bool
+    let onToggle: () -> Void
+    
+    var body: some View {
+        Button(action: onToggle) {
+            HStack {
+                ZStack {
+                    Circle()
+                        .fill(Color.accentColor.opacity(0.15))
+                        .frame(width: 36, height: 36)
+                    
+                    Text(letter)
+                        .font(.headline)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.accent)
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(letter == "#" ? "Numbers & Symbols" : letter)
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+                    
+                    Text("\(trackCount) \(trackCount == 1 ? "track" : "tracks")")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.secondary)
+                    .rotationEffect(.degrees(isExpanded ? 90 : 0))
+            }
+            .padding(.vertical, 8)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 }
 
