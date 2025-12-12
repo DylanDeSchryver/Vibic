@@ -2,6 +2,7 @@ import Foundation
 import AVFoundation
 import MediaPlayer
 import Combine
+import WidgetKit
 
 final class AudioPlaybackEngine: NSObject, ObservableObject {
     static let shared = AudioPlaybackEngine()
@@ -50,6 +51,42 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         setupRemoteCommandCenter()
         setupAudioSession()
         loadSettingsFromDefaults()
+        setupWidgetActionObserver()
+    }
+    
+    private func setupWidgetActionObserver() {
+        // Check for widget actions periodically
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            self?.checkWidgetAction()
+        }
+    }
+    
+    private func checkWidgetAction() {
+        guard let defaults = UserDefaults(suiteName: "group.com.vibic.app"),
+              let action = defaults.string(forKey: "widgetAction"),
+              let timestamp = defaults.object(forKey: "widgetActionTimestamp") as? Date else {
+            return
+        }
+        
+        // Only process recent actions (within last 2 seconds)
+        guard Date().timeIntervalSince(timestamp) < 2 else { return }
+        
+        // Clear the action
+        defaults.removeObject(forKey: "widgetAction")
+        defaults.removeObject(forKey: "widgetActionTimestamp")
+        
+        DispatchQueue.main.async { [weak self] in
+            switch action {
+            case "togglePlayPause":
+                self?.togglePlayPause()
+            case "nextTrack":
+                self?.playNext()
+            case "previousTrack":
+                self?.playPrevious()
+            default:
+                break
+            }
+        }
     }
     
     deinit {
@@ -490,10 +527,35 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         nowPlayingInfo[MPNowPlayingInfoPropertyPlaybackRate] = isPlaying ? 1.0 : 0.0
         
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlayingInfo
+        
+        // Sync with widget
+        updateWidgetData()
+    }
+    
+    private func updateWidgetData() {
+        guard let track = currentTrack else {
+            NowPlayingShared.shared.clear()
+            WidgetCenter.shared.reloadTimelines(ofKind: "VibicNowPlaying")
+            return
+        }
+        
+        let data = NowPlayingData(
+            trackTitle: track.title ?? "Unknown",
+            artistName: track.artist,
+            isPlaying: isPlaying,
+            currentTime: currentTime,
+            duration: duration,
+            artworkData: track.artworkData,
+            trackId: track.id?.uuidString
+        )
+        
+        NowPlayingShared.shared.save(data)
+        WidgetCenter.shared.reloadTimelines(ofKind: "VibicNowPlaying")
     }
     
     private func clearNowPlayingInfo() {
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
+        NowPlayingShared.shared.clear()
     }
     
     // MARK: - Utility
