@@ -5,6 +5,7 @@ struct VibicApp: App {
     let coreDataManager = CoreDataManager.shared
     @StateObject private var libraryController = LibraryController.shared
     @StateObject private var playbackEngine = AudioPlaybackEngine.shared
+    @State private var showSplash = true
     
     init() {
         configureAudioSession()
@@ -12,10 +13,25 @@ struct VibicApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, coreDataManager.viewContext)
-                .environmentObject(libraryController)
-                .environmentObject(playbackEngine)
+            ZStack {
+                ContentView()
+                    .environment(\.managedObjectContext, coreDataManager.viewContext)
+                    .environmentObject(libraryController)
+                    .environmentObject(playbackEngine)
+                
+                if showSplash {
+                    SplashScreenView()
+                        .transition(.opacity.animation(.easeOut(duration: 0.5)))
+                        .zIndex(1)
+                }
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
+                    withAnimation(.easeOut(duration: 0.5)) {
+                        showSplash = false
+                    }
+                }
+            }
         }
     }
     
