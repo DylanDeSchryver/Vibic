@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import UniformTypeIdentifiers
 
 struct FileBrowserView: View {
@@ -7,6 +8,9 @@ struct FileBrowserView: View {
     @State private var showingFolderPicker = false
     @State private var showingImportAlert = false
     @State private var importMessage = ""
+    
+    // Workaround: Use separate views for each file importer to avoid conflicts
+    @State private var filePickerID = UUID()
     
     var body: some View {
         NavigationStack {
@@ -69,12 +73,13 @@ struct FileBrowserView: View {
                 .padding(.bottom, 32)
             }
             .navigationTitle("Files")
-            .fileImporter(
-                isPresented: $showingFilePicker,
-                allowedContentTypes: supportedAudioTypes,
-                allowsMultipleSelection: true
-            ) { result in
-                handleFileImport(result)
+            .sheet(isPresented: $showingFilePicker) {
+                DocumentPickerView(
+                    contentTypes: [.audio, .mp3, .mpeg4Audio, .wav, .aiff],
+                    allowsMultipleSelection: true
+                ) { urls in
+                    handleFileImport(.success(urls))
+                }
             }
             .fileImporter(
                 isPresented: $showingFolderPicker,
@@ -99,7 +104,17 @@ struct FileBrowserView: View {
     }
     
     private var supportedAudioTypes: [UTType] {
-        [.audio, .mp3, .mpeg4Audio, .wav, .aiff]
+        var types: [UTType] = [.mp3, .mpeg4Audio, .wav, .aiff]
+        // Add additional audio types that may be available
+        if let flac = UTType("org.xiph.flac") {
+            types.append(flac)
+        }
+        if let aac = UTType("public.aac-audio") {
+            types.append(aac)
+        }
+        // Add generic audio as fallback
+        types.append(.audio)
+        return types
     }
     
     private func handleFileImport(_ result: Result<[URL], Error>) {
@@ -147,6 +162,43 @@ struct FileBrowserView: View {
         case .failure(let error):
             importMessage = "Failed to select folder: \(error.localizedDescription)"
             showingImportAlert = true
+        }
+    }
+}
+
+// MARK: - Document Picker (UIKit wrapper)
+
+struct DocumentPickerView: UIViewControllerRepresentable {
+    let contentTypes: [UTType]
+    let allowsMultipleSelection: Bool
+    let onPick: ([URL]) -> Void
+    
+    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: contentTypes, asCopy: true)
+        picker.allowsMultipleSelection = allowsMultipleSelection
+        picker.delegate = context.coordinator
+        return picker
+    }
+    
+    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onPick: onPick)
+    }
+    
+    class Coordinator: NSObject, UIDocumentPickerDelegate {
+        let onPick: ([URL]) -> Void
+        
+        init(onPick: @escaping ([URL]) -> Void) {
+            self.onPick = onPick
+        }
+        
+        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+            onPick(urls)
+        }
+        
+        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+            onPick([])
         }
     }
 }
