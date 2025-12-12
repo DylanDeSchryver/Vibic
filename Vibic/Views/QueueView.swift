@@ -154,22 +154,13 @@ struct NowPlayingRow: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            // Artwork
-            if let artworkImage = track.artworkImage {
-                Image(uiImage: artworkImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 50, height: 50)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-            } else {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(width: 50, height: 50)
-                    .overlay {
-                        Image(systemName: "music.note")
-                            .foregroundStyle(.gray)
-                    }
-            }
+            // Artwork - using lazy loading
+            LazyArtworkView(
+                trackId: track.id,
+                artworkData: track.artworkData,
+                size: 50,
+                cornerRadius: 8
+            )
             
             // Track info
             VStack(alignment: .leading, spacing: 2) {
@@ -192,12 +183,11 @@ struct NowPlayingRow: View {
             if isPlaying {
                 Image(systemName: "waveform")
                     .font(.title3)
-                    .foregroundStyle(.purple)
-                    .symbolEffect(.variableColor.iterative)
+                    .foregroundStyle(.tint)
             } else {
                 Image(systemName: "pause.fill")
                     .font(.title3)
-                    .foregroundStyle(.purple)
+                    .foregroundStyle(.tint)
             }
         }
         .padding(.vertical, 4)
@@ -212,23 +202,13 @@ struct QueueTrackRow: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            // Artwork
-            if let artworkImage = track.artworkImage {
-                Image(uiImage: artworkImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 44, height: 44)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
-            } else {
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(width: 44, height: 44)
-                    .overlay {
-                        Image(systemName: "music.note")
-                            .font(.caption)
-                            .foregroundStyle(.gray)
-                    }
-            }
+            // Artwork - using lazy loading
+            LazyArtworkView(
+                trackId: track.id,
+                artworkData: track.artworkData,
+                size: 44,
+                cornerRadius: 6
+            )
             
             // Track info
             VStack(alignment: .leading, spacing: 2) {
@@ -252,7 +232,7 @@ struct QueueTrackRow: View {
             } label: {
                 Image(systemName: "text.line.first.and.arrowtriangle.forward")
                     .font(.body)
-                    .foregroundStyle(.purple)
+                    .foregroundStyle(.tint)
             }
             .buttonStyle(.plain)
         }

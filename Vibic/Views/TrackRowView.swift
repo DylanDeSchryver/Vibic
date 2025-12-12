@@ -54,18 +54,12 @@ struct TrackRowView: View {
     
     private var artworkView: some View {
         ZStack {
-            if let artwork = track.artworkImage {
-                Image(uiImage: artwork)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } else {
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(isCurrentTrack ? Color.accentColor.opacity(0.3) : Color.secondary.opacity(0.15))
-                
-                Image(systemName: "music.note")
-                    .font(.caption)
-                    .foregroundStyle(isCurrentTrack ? .accent : .secondary)
-            }
+            LazyArtworkView(
+                trackId: track.id,
+                artworkData: track.artworkData,
+                size: 44,
+                cornerRadius: 6
+            )
             
             if isCurrentTrack && isPlaying {
                 RoundedRectangle(cornerRadius: 6)
@@ -73,11 +67,9 @@ struct TrackRowView: View {
                 Image(systemName: "waveform")
                     .font(.caption)
                     .foregroundStyle(.white)
-                    .symbolEffect(.variableColor.iterative)
             }
         }
         .frame(width: 44, height: 44)
-        .clipShape(RoundedRectangle(cornerRadius: 6))
     }
 }
 

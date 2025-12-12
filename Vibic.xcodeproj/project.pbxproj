@@ -33,6 +33,8 @@
 		A1000024001 /* NowPlayingShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000024100 /* NowPlayingShared.swift */; };
 		A1000025001 /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000025100 /* QueueView.swift */; };
 		A1000026001 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000026100 /* ThemeManager.swift */; };
+		A1000027001 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000027100 /* ImageCache.swift */; };
+		A1000028001 /* LazyArtworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000028100 /* LazyArtworkView.swift */; };
 		FCCF19B02EEBA67C00CF9E3A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */; };
 		FCCF19B22EEBA67C00CF9E3A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */; };
 		FCCF19BF2EEBA67C00CF9E3A /* VibicWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCCF19AD2EEBA67B00CF9E3A /* VibicWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -91,6 +93,8 @@
 		A1000024100 /* NowPlayingShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingShared.swift; sourceTree = "<group>"; };
 		A1000025100 /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 		A1000026100 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		A1000027100 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		A1000028100 /* LazyArtworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyArtworkView.swift; sourceTree = "<group>"; };
 		FCCF19AD2EEBA67B00CF9E3A /* VibicWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VibicWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -179,6 +183,7 @@
 				A1000019100 /* LyricsService.swift */,
 				A1000024100 /* NowPlayingShared.swift */,
 				A1000026100 /* ThemeManager.swift */,
+				A1000027100 /* ImageCache.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -197,6 +202,7 @@
 				A1000021100 /* SettingsView.swift */,
 				A1000023100 /* SplashScreenView.swift */,
 				A1000025100 /* QueueView.swift */,
+				A1000028100 /* LazyArtworkView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -349,6 +355,8 @@
 				A1000024001 /* NowPlayingShared.swift in Sources */,
 				A1000025001 /* QueueView.swift in Sources */,
 				A1000026001 /* ThemeManager.swift in Sources */,
+				A1000027001 /* ImageCache.swift in Sources */,
+				A1000028001 /* LazyArtworkView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
