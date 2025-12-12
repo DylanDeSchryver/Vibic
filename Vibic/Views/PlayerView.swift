@@ -5,6 +5,7 @@ struct PlayerView: View {
     @EnvironmentObject var playbackEngine: AudioPlaybackEngine
     @State private var isDragging = false
     @State private var dragValue: Double = 0
+    @State private var showQueue = false
     
     var body: some View {
         NavigationStack {
@@ -58,6 +59,15 @@ struct PlayerView: View {
                 }
                 
                 ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showQueue = true
+                    } label: {
+                        Image(systemName: "list.bullet")
+                            .font(.title3)
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Button {
                             // Share functionality
@@ -81,6 +91,10 @@ struct PlayerView: View {
                             .font(.title3)
                     }
                 }
+            }
+            .sheet(isPresented: $showQueue) {
+                QueueView()
+                    .environmentObject(playbackEngine)
             }
         }
     }

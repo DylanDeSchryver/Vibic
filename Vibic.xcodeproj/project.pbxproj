@@ -31,6 +31,7 @@
 		A1000022001 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1000022100 /* LaunchScreen.storyboard */; };
 		A1000023001 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000023100 /* SplashScreenView.swift */; };
 		A1000024001 /* NowPlayingShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000024100 /* NowPlayingShared.swift */; };
+		A1000025001 /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000025100 /* QueueView.swift */; };
 		FCCF19B02EEBA67C00CF9E3A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */; };
 		FCCF19B22EEBA67C00CF9E3A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */; };
 		FCCF19BF2EEBA67C00CF9E3A /* VibicWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCCF19AD2EEBA67B00CF9E3A /* VibicWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -87,6 +88,7 @@
 		A1000022100 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A1000023100 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		A1000024100 /* NowPlayingShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingShared.swift; sourceTree = "<group>"; };
+		A1000025100 /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
 		FCCF19AD2EEBA67B00CF9E3A /* VibicWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VibicWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -191,6 +193,7 @@
 				A1000020100 /* LyricsView.swift */,
 				A1000021100 /* SettingsView.swift */,
 				A1000023100 /* SplashScreenView.swift */,
+				A1000025100 /* QueueView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -341,6 +344,7 @@
 				A1000021001 /* SettingsView.swift in Sources */,
 				A1000023001 /* SplashScreenView.swift in Sources */,
 				A1000024001 /* NowPlayingShared.swift in Sources */,
+				A1000025001 /* QueueView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

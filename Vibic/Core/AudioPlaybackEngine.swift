@@ -333,6 +333,62 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         currentIndex = 0
     }
     
+    // MARK: - Queue Manipulation
+    
+    /// Move a track to play immediately after the current track
+    func moveToPlayNext(from index: Int) {
+        guard index > currentIndex && index < queue.count else { return }
+        
+        let track = queue.remove(at: index)
+        let insertIndex = currentIndex + 1
+        queue.insert(track, at: insertIndex)
+        
+        // Update original queue as well
+        if let originalIndex = originalQueue.firstIndex(where: { $0.id == track.id }) {
+            originalQueue.remove(at: originalIndex)
+            let originalInsertIndex = min(currentIndex + 1, originalQueue.count)
+            originalQueue.insert(track, at: originalInsertIndex)
+        }
+    }
+    
+    /// Move a track from one position to another in the queue
+    func moveTrack(from sourceIndex: Int, to destinationIndex: Int) {
+        guard sourceIndex != destinationIndex,
+              sourceIndex >= 0, sourceIndex < queue.count,
+              destinationIndex >= 0, destinationIndex < queue.count else { return }
+        
+        let track = queue.remove(at: sourceIndex)
+        queue.insert(track, at: destinationIndex)
+        
+        // Adjust currentIndex if needed
+        if sourceIndex == currentIndex {
+            currentIndex = destinationIndex
+        } else if sourceIndex < currentIndex && destinationIndex >= currentIndex {
+            currentIndex -= 1
+        } else if sourceIndex > currentIndex && destinationIndex <= currentIndex {
+            currentIndex += 1
+        }
+        
+        // Update original queue
+        if let originalSourceIndex = originalQueue.firstIndex(where: { $0.id == track.id }) {
+            originalQueue.remove(at: originalSourceIndex)
+            let clampedDestination = min(destinationIndex, originalQueue.count)
+            originalQueue.insert(track, at: clampedDestination)
+        }
+    }
+    
+    /// Get upcoming tracks (tracks after current)
+    var upcomingTracks: [Track] {
+        guard currentIndex + 1 < queue.count else { return [] }
+        return Array(queue[(currentIndex + 1)...])
+    }
+    
+    /// Get history tracks (tracks before current)
+    var historyTracks: [Track] {
+        guard currentIndex > 0 else { return [] }
+        return Array(queue[0..<currentIndex])
+    }
+    
     // MARK: - Display Link for Time Updates
     
     private func startDisplayLink() {
