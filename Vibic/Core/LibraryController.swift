@@ -2,6 +2,17 @@ import Foundation
 import Combine
 import SwiftUI
 
+enum FolderImportError: LocalizedError {
+    case noAudioFiles
+    
+    var errorDescription: String? {
+        switch self {
+        case .noAudioFiles:
+            return "No audio files found in the selected folder"
+        }
+    }
+}
+
 final class LibraryController: ObservableObject {
     static let shared = LibraryController()
     
@@ -74,6 +85,86 @@ final class LibraryController: ObservableObject {
                 
                 if !errorMessages.isEmpty {
                     self?.importError = "Imported \(successCount) files. Errors: \(errorMessages.joined(separator: ", "))"
+                }
+            }
+        }
+    }
+    
+    func importFolderAsPlaylist(from folderURL: URL, completion: @escaping (Result<(playlistName: String, trackCount: Int), Error>) -> Void) {
+        isImporting = true
+        importError = nil
+        
+        let shouldStopAccessing = folderURL.startAccessingSecurityScopedResource()
+        
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            defer {
+                if shouldStopAccessing {
+                    folderURL.stopAccessingSecurityScopedResource()
+                }
+            }
+            
+            guard let self = self else { return }
+            
+            let fileManager = FileManager.default
+            let folderName = folderURL.lastPathComponent
+            
+            // Get all audio files in the folder
+            var audioURLs: [URL] = []
+            
+            if let enumerator = fileManager.enumerator(at: folderURL, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles]) {
+                for case let fileURL as URL in enumerator {
+                    if AudioFileManager.isAudioFile(fileURL) {
+                        audioURLs.append(fileURL)
+                    }
+                }
+            }
+            
+            guard !audioURLs.isEmpty else {
+                DispatchQueue.main.async {
+                    self.isImporting = false
+                    completion(.failure(FolderImportError.noAudioFiles))
+                }
+                return
+            }
+            
+            // Import all audio files
+            self.audioFileManager.importFiles(from: audioURLs) { results in
+                DispatchQueue.main.async {
+                    var importedTracks: [Track] = []
+                    
+                    for result in results {
+                        if case .success(let fileInfo) = result {
+                            // Check if track already exists
+                            if let existingTrack = self.coreDataManager.fetchTrack(by: fileInfo.filePath) {
+                                importedTracks.append(existingTrack)
+                            } else {
+                                let track = self.coreDataManager.createTrack(
+                                    title: fileInfo.title,
+                                    artist: fileInfo.artist,
+                                    filePath: fileInfo.filePath,
+                                    duration: fileInfo.duration,
+                                    fileSize: fileInfo.fileSize,
+                                    tags: nil,
+                                    artworkData: fileInfo.artworkData
+                                )
+                                importedTracks.append(track)
+                            }
+                        }
+                    }
+                    
+                    // Create playlist with folder name
+                    let playlist = self.coreDataManager.createPlaylist(name: folderName)
+                    
+                    // Add tracks to playlist
+                    for track in importedTracks {
+                        self.coreDataManager.addTrackToPlaylist(track, playlist: playlist)
+                    }
+                    
+                    self.refreshTracks()
+                    self.refreshPlaylists()
+                    self.isImporting = false
+                    
+                    completion(.success((playlistName: folderName, trackCount: importedTracks.count)))
                 }
             }
         }

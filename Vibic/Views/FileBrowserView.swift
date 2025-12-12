@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 struct FileBrowserView: View {
     @EnvironmentObject var libraryController: LibraryController
     @State private var showingFilePicker = false
+    @State private var showingFolderPicker = false
     @State private var showingImportAlert = false
     @State private var importMessage = ""
     
@@ -21,7 +22,7 @@ struct FileBrowserView: View {
                         .font(.title2)
                         .fontWeight(.semibold)
                     
-                    Text("Import audio files from your device to add them to your Vibic library.")
+                    Text("Import audio files or folders from your device to add them to your Vibic library.")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
@@ -36,6 +37,15 @@ struct FileBrowserView: View {
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    
+                    Button {
+                        showingFolderPicker = true
+                    } label: {
+                        Label("Import Folder as Playlist", systemImage: "folder.badge.plus")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
                     .controlSize(.large)
                     
                     Text("Supported formats: MP3, M4A, WAV, AAC, FLAC, AIFF")
@@ -65,6 +75,13 @@ struct FileBrowserView: View {
                 allowsMultipleSelection: true
             ) { result in
                 handleFileImport(result)
+            }
+            .fileImporter(
+                isPresented: $showingFolderPicker,
+                allowedContentTypes: [.folder],
+                allowsMultipleSelection: false
+            ) { result in
+                handleFolderImport(result)
             }
             .alert("Import Result", isPresented: $showingImportAlert) {
                 Button("OK", role: .cancel) {}
@@ -104,6 +121,31 @@ struct FileBrowserView: View {
             }
         case .failure(let error):
             importMessage = "Failed to import: \(error.localizedDescription)"
+            showingImportAlert = true
+        }
+    }
+    
+    private func handleFolderImport(_ result: Result<[URL], Error>) {
+        switch result {
+        case .success(let urls):
+            guard let folderURL = urls.first else {
+                importMessage = "No folder selected."
+                showingImportAlert = true
+                return
+            }
+            
+            libraryController.importFolderAsPlaylist(from: folderURL) { importResult in
+                switch importResult {
+                case .success(let info):
+                    importMessage = "Created playlist \"\(info.playlistName)\" with \(info.trackCount) track(s)."
+                    showingImportAlert = true
+                case .failure(let error):
+                    importMessage = "Failed to import folder: \(error.localizedDescription)"
+                    showingImportAlert = true
+                }
+            }
+        case .failure(let error):
+            importMessage = "Failed to select folder: \(error.localizedDescription)"
             showingImportAlert = true
         }
     }
