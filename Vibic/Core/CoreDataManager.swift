@@ -109,6 +109,41 @@ final class CoreDataManager {
         save()
     }
     
+    // MARK: - Streaming Track Operations
+    
+    func createStreamedTrack(
+        title: String,
+        artist: String?,
+        videoId: String,
+        duration: Double,
+        artworkData: Data?
+    ) -> Track {
+        let track = Track(context: viewContext)
+        track.id = UUID()
+        track.title = title
+        track.artist = artist
+        track.videoId = videoId
+        track.isStreamed = true
+        track.duration = duration
+        track.artworkData = artworkData
+        track.addedDate = Date()
+        track.fileSize = 0
+        save()
+        return track
+    }
+    
+    func fetchTrackByVideoId(_ videoId: String) -> Track? {
+        let request: NSFetchRequest<Track> = Track.fetchRequest()
+        request.predicate = NSPredicate(format: "videoId == %@", videoId)
+        request.fetchLimit = 1
+        do {
+            return try viewContext.fetch(request).first
+        } catch {
+            print("Error fetching track by videoId: \(error)")
+            return nil
+        }
+    }
+    
     // MARK: - Playlist Operations
     
     func createPlaylist(name: String) -> Playlist {

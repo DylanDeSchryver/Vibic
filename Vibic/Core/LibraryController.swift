@@ -188,6 +188,37 @@ final class LibraryController: ObservableObject {
         refreshTracks()
     }
     
+    // MARK: - Streaming Track Import
+    
+    func addStreamedTrack(from searchResult: YouTubeSearchResult, completion: @escaping (Track?) -> Void) {
+        // Check if already in library
+        if let existing = coreDataManager.fetchTrackByVideoId(searchResult.id) {
+            completion(existing)
+            return
+        }
+        
+        Task {
+            // Fetch thumbnail
+            let artworkData = await YouTubeService.shared.getThumbnail(videoId: searchResult.id)
+            
+            await MainActor.run {
+                let track = coreDataManager.createStreamedTrack(
+                    title: searchResult.title,
+                    artist: searchResult.artist,
+                    videoId: searchResult.id,
+                    duration: searchResult.durationSeconds,
+                    artworkData: artworkData
+                )
+                refreshTracks()
+                completion(track)
+            }
+        }
+    }
+    
+    func isTrackInLibrary(videoId: String) -> Bool {
+        return coreDataManager.fetchTrackByVideoId(videoId) != nil
+    }
+    
     // MARK: - Track Operations
     
     func deleteTrack(_ track: Track) {

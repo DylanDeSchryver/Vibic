@@ -44,6 +44,14 @@ extension Track {
         return FileManager.default.fileExists(atPath: filePath)
     }
     
+    var isStreamedTrack: Bool {
+        return isStreamed && videoId != nil
+    }
+    
+    var sourceType: String {
+        isStreamed ? "Streaming" : "Local"
+    }
+    
     private func formatDuration(_ duration: Double) -> String {
         guard !duration.isNaN && !duration.isInfinite else { return "0:00" }
         let minutes = Int(duration) / 60

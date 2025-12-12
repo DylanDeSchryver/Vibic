@@ -35,6 +35,8 @@
 		A1000026001 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000026100 /* ThemeManager.swift */; };
 		A1000027001 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000027100 /* ImageCache.swift */; };
 		A1000028001 /* LazyArtworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000028100 /* LazyArtworkView.swift */; };
+		A1000029001 /* YouTubeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000029100 /* YouTubeService.swift */; };
+		A1000030001 /* StreamSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000030100 /* StreamSearchView.swift */; };
 		FCCF19B02EEBA67C00CF9E3A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */; };
 		FCCF19B22EEBA67C00CF9E3A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */; };
 		FCCF19BF2EEBA67C00CF9E3A /* VibicWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCCF19AD2EEBA67B00CF9E3A /* VibicWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -95,6 +97,8 @@
 		A1000026100 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		A1000027100 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		A1000028100 /* LazyArtworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyArtworkView.swift; sourceTree = "<group>"; };
+		A1000029100 /* YouTubeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeService.swift; sourceTree = "<group>"; };
+		A1000030100 /* StreamSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamSearchView.swift; sourceTree = "<group>"; };
 		FCCF19AD2EEBA67B00CF9E3A /* VibicWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VibicWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -184,6 +188,7 @@
 				A1000024100 /* NowPlayingShared.swift */,
 				A1000026100 /* ThemeManager.swift */,
 				A1000027100 /* ImageCache.swift */,
+				A1000029100 /* YouTubeService.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -203,6 +208,7 @@
 				A1000023100 /* SplashScreenView.swift */,
 				A1000025100 /* QueueView.swift */,
 				A1000028100 /* LazyArtworkView.swift */,
+				A1000030100 /* StreamSearchView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -357,6 +363,8 @@
 				A1000026001 /* ThemeManager.swift in Sources */,
 				A1000027001 /* ImageCache.swift in Sources */,
 				A1000028001 /* LazyArtworkView.swift in Sources */,
+				A1000029001 /* YouTubeService.swift in Sources */,
+				A1000030001 /* StreamSearchView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
