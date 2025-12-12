@@ -36,8 +36,29 @@ struct PlayerView: View {
                     secondaryControlsView
                     
                     Spacer()
+                    
+                    // Swipe up indicator
+                    VStack(spacing: 4) {
+                        Capsule()
+                            .fill(Color.secondary.opacity(0.3))
+                            .frame(width: 36, height: 5)
+                        Text("Swipe up for queue")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.bottom, 8)
                 }
                 .padding(.horizontal, 24)
+                .contentShape(Rectangle())
+                .simultaneousGesture(
+                    DragGesture(minimumDistance: 20)
+                        .onEnded { gesture in
+                            // Swipe up with very generous tolerance
+                            if gesture.translation.height < -30 {
+                                showQueue = true
+                            }
+                        }
+                )
             }
             .background(
                 LinearGradient(
@@ -128,6 +149,15 @@ struct PlayerView: View {
         .frame(width: size, height: size)
         .scaleEffect(playbackEngine.isPlaying ? 1.0 : 0.95)
         .animation(.spring(response: 0.5, dampingFraction: 0.6), value: playbackEngine.isPlaying)
+        .contentShape(Rectangle())
+        .gesture(
+            DragGesture(minimumDistance: 15)
+                .onEnded { gesture in
+                    if gesture.translation.height < -25 {
+                        showQueue = true
+                    }
+                }
+        )
     }
     
     private var trackInfoView: some View {
