@@ -123,11 +123,6 @@ struct SmallWidgetView: View {
 struct MediumWidgetView: View {
     let data: NowPlayingData
     
-    var progressPercent: CGFloat {
-        guard data.duration > 0 else { return 0 }
-        return CGFloat(min(max(data.currentTime / data.duration, 0), 1.0))
-    }
-    
     var body: some View {
         HStack(spacing: 14) {
             // Artwork - slightly larger
@@ -149,13 +144,13 @@ struct MediumWidgetView: View {
                     }
             }
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 8) {
                 // Track info
                 VStack(alignment: .leading, spacing: 2) {
                     Text(data.trackTitle)
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(.white)
-                        .lineLimit(1)
+                        .lineLimit(2)
                     
                     if let artist = data.artistName {
                         Text(artist)
@@ -165,34 +160,7 @@ struct MediumWidgetView: View {
                     }
                 }
                 
-                // Progress bar
-                VStack(spacing: 2) {
-                    ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(.white.opacity(0.3))
-                            .frame(height: 4)
-                        
-                        GeometryReader { geo in
-                            RoundedRectangle(cornerRadius: 2)
-                                .fill(.white)
-                                .frame(width: geo.size.width * progressPercent, height: 4)
-                        }
-                        .frame(height: 4)
-                    }
-                    
-                    // Time labels
-                    HStack {
-                        Text(formatTime(data.currentTime))
-                            .font(.system(size: 9))
-                            .foregroundStyle(.white.opacity(0.7))
-                        
-                        Spacer()
-                        
-                        Text(formatTime(data.duration))
-                            .font(.system(size: 9))
-                            .foregroundStyle(.white.opacity(0.7))
-                    }
-                }
+                Spacer()
                 
                 // Playback controls
                 HStack(spacing: 24) {
@@ -221,12 +189,6 @@ struct MediumWidgetView: View {
             }
         }
         .padding()
-    }
-    
-    func formatTime(_ time: Double) -> String {
-        let minutes = Int(time) / 60
-        let seconds = Int(time) % 60
-        return String(format: "%d:%02d", minutes, seconds)
     }
 }
 
