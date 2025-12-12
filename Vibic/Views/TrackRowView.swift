@@ -1,12 +1,9 @@
 import SwiftUI
 
 struct TrackRowView: View {
-    @EnvironmentObject var playbackEngine: AudioPlaybackEngine
     let track: Track
-    
-    var isCurrentTrack: Bool {
-        playbackEngine.currentTrack?.id == track.id
-    }
+    var isCurrentTrack: Bool = false
+    var isPlaying: Bool = false
     
     var body: some View {
         HStack(spacing: 12) {
@@ -20,7 +17,7 @@ struct TrackRowView: View {
                         .foregroundStyle(isCurrentTrack ? .accent : .primary)
                         .lineLimit(1)
                     
-                    if isCurrentTrack && playbackEngine.isPlaying {
+                    if isCurrentTrack && isPlaying {
                         NowPlayingIndicator()
                     }
                 }
@@ -70,7 +67,7 @@ struct TrackRowView: View {
                     .foregroundStyle(isCurrentTrack ? .accent : .secondary)
             }
             
-            if isCurrentTrack && playbackEngine.isPlaying {
+            if isCurrentTrack && isPlaying {
                 RoundedRectangle(cornerRadius: 6)
                     .fill(.black.opacity(0.4))
                 Image(systemName: "waveform")
@@ -111,7 +108,6 @@ struct NowPlayingIndicator: View {
 #Preview {
     List {
         TrackRowView(track: Track())
-        TrackRowView(track: Track())
+        TrackRowView(track: Track(), isCurrentTrack: true, isPlaying: true)
     }
-    .environmentObject(AudioPlaybackEngine.shared)
 }

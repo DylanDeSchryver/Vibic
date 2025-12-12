@@ -223,11 +223,15 @@ struct PlaylistDetailView: View {
                 } else {
                     ForEach(playlist.orderedItems, id: \.id) { item in
                         if let track = item.track {
-                            TrackRowView(track: track)
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    playbackEngine.playTrack(track, in: tracks)
-                                }
+                            TrackRowView(
+                                track: track,
+                                isCurrentTrack: playbackEngine.currentTrack?.id == track.id,
+                                isPlaying: playbackEngine.isPlaying
+                            )
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                playbackEngine.playTrack(track, in: tracks)
+                            }
                         }
                     }
                     .onDelete { indexSet in

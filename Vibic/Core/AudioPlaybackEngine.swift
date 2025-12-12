@@ -312,11 +312,16 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     
     @objc private func updatePlaybackTime() {
         guard let player = audioPlayer else { return }
-        currentTime = player.currentTime
+        let newTime = player.currentTime
+        
+        // Only update if time changed by more than 0.1s to reduce re-renders
+        if abs(newTime - currentTime) >= 0.1 {
+            currentTime = newTime
+        }
         
         // Check for crossfade
         if crossfadeEnabled && !isCrossfading && duration > 0 {
-            let timeRemaining = duration - currentTime
+            let timeRemaining = duration - newTime
             if timeRemaining <= crossfadeDuration && timeRemaining > 0 {
                 startCrossfade()
             }

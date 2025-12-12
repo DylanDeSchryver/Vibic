@@ -140,7 +140,11 @@ struct LibraryView: View {
                             .foregroundStyle(isTrackSelected(track) ? .accent : .secondary)
                     }
                     
-                    TrackRowView(track: track)
+                    TrackRowView(
+                        track: track,
+                        isCurrentTrack: playbackEngine.currentTrack?.id == track.id,
+                        isPlaying: playbackEngine.isPlaying
+                    )
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
