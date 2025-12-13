@@ -53,6 +53,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     private var nextAudioPlayer: AVAudioPlayer?
     private var isCrossfading = false
     private var crossfadeStartTime: Date?
+    private var audioEngineSeekOffset: Double = 0 // Track seek position for audio engine
     
     // MARK: - Initialization
     
@@ -214,6 +215,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
             currentTrack = track
             duration = audioFile?.length != nil ? Double(audioFile!.length) / audioFile!.processingFormat.sampleRate : (audioPlayer?.duration ?? 0)
             currentTime = 0
+            audioEngineSeekOffset = 0 // Reset seek offset for new track
             
             updateNowPlayingInfo()
         } catch {
@@ -428,6 +430,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         } else if useAudioEngine, let file = audioFile, let player = playerNode {
             // Seek in audio engine
             player.stop()
+            audioEngineSeekOffset = time // Store seek position
             let sampleRate = file.processingFormat.sampleRate
             let startFrame = AVAudioFramePosition(time * sampleRate)
             let frameCount = AVAudioFrameCount(Double(file.length) - time * sampleRate)
@@ -703,7 +706,8 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
                   let playerTime = player.playerTime(forNodeTime: nodeTime),
                   audioFile != nil else { return }
             
-            newTime = Double(playerTime.sampleTime) / playerTime.sampleRate
+            // Add seek offset since playerTime starts from 0 after scheduling a segment
+            newTime = Double(playerTime.sampleTime) / playerTime.sampleRate + audioEngineSeekOffset
             
             // Check if playback has finished
             if newTime >= duration - 0.1 && isPlaying {
