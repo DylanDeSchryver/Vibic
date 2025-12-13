@@ -37,6 +37,8 @@
 		A1000028001 /* LazyArtworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000028100 /* LazyArtworkView.swift */; };
 		A1000029001 /* YouTubeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000029100 /* YouTubeService.swift */; };
 		A1000030001 /* StreamSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000030100 /* StreamSearchView.swift */; };
+		FC3E931D2EED06BB000330B6 /* EqualizerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3E931C2EED06BB000330B6 /* EqualizerManager.swift */; };
+		FC3E931F2EED06CD000330B6 /* EqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3E931E2EED06CD000330B6 /* EqualizerView.swift */; };
 		FC8045362EECF1B700C3DC6C /* YouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = FC8045352EECF1B700C3DC6C /* YouTubeKit */; };
 		FCCF19B02EEBA67C00CF9E3A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */; };
 		FCCF19B22EEBA67C00CF9E3A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */; };
@@ -100,6 +102,8 @@
 		A1000028100 /* LazyArtworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyArtworkView.swift; sourceTree = "<group>"; };
 		A1000029100 /* YouTubeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeService.swift; sourceTree = "<group>"; };
 		A1000030100 /* StreamSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamSearchView.swift; sourceTree = "<group>"; };
+		FC3E931C2EED06BB000330B6 /* EqualizerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerManager.swift; sourceTree = "<group>"; };
+		FC3E931E2EED06CD000330B6 /* EqualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerView.swift; sourceTree = "<group>"; };
 		FCCF19AD2EEBA67B00CF9E3A /* VibicWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VibicWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -181,6 +185,7 @@
 		A1000024000 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				FC3E931C2EED06BB000330B6 /* EqualizerManager.swift */,
 				A1000005000 /* CoreDataManager.swift */,
 				A1000006000 /* AudioFileManager.swift */,
 				A1000007000 /* LibraryController.swift */,
@@ -198,6 +203,7 @@
 		A1000025000 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FC3E931E2EED06CD000330B6 /* EqualizerView.swift */,
 				A1000010000 /* LibraryView.swift */,
 				A1000011000 /* FileBrowserView.swift */,
 				A1000012000 /* PlaylistView.swift */,
@@ -364,10 +370,12 @@
 				A1000021001 /* SettingsView.swift in Sources */,
 				A1000023001 /* SplashScreenView.swift in Sources */,
 				A1000024001 /* NowPlayingShared.swift in Sources */,
+				FC3E931D2EED06BB000330B6 /* EqualizerManager.swift in Sources */,
 				A1000025001 /* QueueView.swift in Sources */,
 				A1000026001 /* ThemeManager.swift in Sources */,
 				A1000027001 /* ImageCache.swift in Sources */,
 				A1000028001 /* LazyArtworkView.swift in Sources */,
+				FC3E931F2EED06CD000330B6 /* EqualizerView.swift in Sources */,
 				A1000029001 /* YouTubeService.swift in Sources */,
 				A1000030001 /* StreamSearchView.swift in Sources */,
 			);

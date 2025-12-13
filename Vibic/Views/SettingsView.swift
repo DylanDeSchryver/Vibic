@@ -15,6 +15,9 @@ struct SettingsView: View {
     
     @State private var showingResetAlert = false
     @State private var showingAPIKeyInfo = false
+    @State private var showingEqualizer = false
+    
+    @ObservedObject private var eqManager = EqualizerManager.shared
     
     var body: some View {
         NavigationStack {
@@ -61,6 +64,30 @@ struct SettingsView: View {
                     Label("Playback", systemImage: "play.circle")
                 } footer: {
                     Text("Gapless removes silence between tracks. Crossfade smoothly blends the end of one track into the next.")
+                }
+                
+                // MARK: - Equalizer Section
+                Section {
+                    Button {
+                        showingEqualizer = true
+                    } label: {
+                        HStack {
+                            Text("Equalizer")
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            HStack(spacing: 6) {
+                                Text(eqManager.isEnabled ? eqManager.currentPreset.rawValue : "Off")
+                                    .foregroundStyle(.secondary)
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                } header: {
+                    Label("Sound", systemImage: "slider.horizontal.3")
+                } footer: {
+                    Text("Customize audio output with a 10-band equalizer and presets.")
                 }
                 
                 // MARK: - Appearance Section
@@ -198,6 +225,9 @@ struct SettingsView: View {
             }
             .sheet(isPresented: $showingAPIKeyInfo) {
                 APIKeyInfoView()
+            }
+            .sheet(isPresented: $showingEqualizer) {
+                EqualizerView()
             }
         }
     }

@@ -14,6 +14,13 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     private var displayLink: CADisplayLink?
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Audio Engine for EQ
+    private var audioEngine: AVAudioEngine?
+    private var playerNode: AVAudioPlayerNode?
+    private var eqNode: AVAudioUnitEQ?
+    private var audioFile: AVAudioFile?
+    private var useAudioEngine = false
+    
     // MARK: - Published Properties
     
     @Published var currentTrack: Track?
@@ -53,8 +60,71 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         super.init()
         setupRemoteCommandCenter()
         setupAudioSession()
+        setupAudioEngineWithEQ()
         loadSettingsFromDefaults()
         setupWidgetActionObserver()
+        observeEQChanges()
+    }
+    
+    // MARK: - Audio Engine Setup with EQ
+    
+    private func setupAudioEngineWithEQ() {
+        audioEngine = AVAudioEngine()
+        playerNode = AVAudioPlayerNode()
+        eqNode = AVAudioUnitEQ(numberOfBands: 10)
+        
+        guard let engine = audioEngine,
+              let player = playerNode,
+              let eq = eqNode else { return }
+        
+        // Configure EQ bands (10-band)
+        let frequencies: [Float] = [32, 64, 125, 250, 500, 1000, 2000, 4000, 8000, 16000]
+        for (index, freq) in frequencies.enumerated() {
+            let band = eq.bands[index]
+            band.filterType = .parametric
+            band.frequency = freq
+            band.bandwidth = 1.0
+            band.gain = 0
+            band.bypass = false
+        }
+        
+        // Attach nodes
+        engine.attach(player)
+        engine.attach(eq)
+        
+        // Connect: playerNode -> EQ -> mainMixer -> output
+        let format = engine.mainMixerNode.outputFormat(forBus: 0)
+        engine.connect(player, to: eq, format: format)
+        engine.connect(eq, to: engine.mainMixerNode, format: format)
+        
+        // Apply saved EQ settings
+        applyEQSettings()
+    }
+    
+    private func observeEQChanges() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleEQSettingsChanged),
+            name: .eqSettingsChanged,
+            object: nil
+        )
+    }
+    
+    @objc private func handleEQSettingsChanged() {
+        applyEQSettings()
+    }
+    
+    private func applyEQSettings() {
+        guard let eq = eqNode else { return }
+        
+        let eqManager = EqualizerManager.shared
+        let isEnabled = eqManager.isEnabled
+        let gains = eqManager.getCurrentGains()
+        
+        for (index, gain) in gains.enumerated() {
+            eq.bands[index].gain = isEnabled ? gain : 0
+            eq.bands[index].bypass = !isEnabled
+        }
     }
     
     private func setupWidgetActionObserver() {
@@ -121,23 +191,75 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         guard let filePath = track.filePath else { return }
         let fileURL = URL(fileURLWithPath: filePath)
         
+        // Check if EQ is enabled - use audio engine for EQ processing
+        let eqEnabled = EqualizerManager.shared.isEnabled
+        
         do {
             stopAllPlayers()
             isStreamingTrack = false
             
-            audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
-            audioPlayer?.delegate = self
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.volume = volume
+            if eqEnabled {
+                // Use AVAudioEngine for EQ processing
+                try loadTrackWithAudioEngine(fileURL: fileURL)
+                useAudioEngine = true
+            } else {
+                // Use simple AVAudioPlayer when EQ is off (more efficient)
+                audioPlayer = try AVAudioPlayer(contentsOf: fileURL)
+                audioPlayer?.delegate = self
+                audioPlayer?.prepareToPlay()
+                audioPlayer?.volume = volume
+                useAudioEngine = false
+            }
             
             currentTrack = track
-            duration = audioPlayer?.duration ?? 0
+            duration = audioFile?.length != nil ? Double(audioFile!.length) / audioFile!.processingFormat.sampleRate : (audioPlayer?.duration ?? 0)
             currentTime = 0
             
             updateNowPlayingInfo()
         } catch {
             print("Failed to load audio: \(error)")
         }
+    }
+    
+    private func loadTrackWithAudioEngine(fileURL: URL) throws {
+        guard let engine = audioEngine,
+              let player = playerNode else {
+            throw NSError(domain: "AudioPlaybackEngine", code: -1, userInfo: [NSLocalizedDescriptionKey: "Audio engine not initialized"])
+        }
+        
+        // Load audio file
+        audioFile = try AVAudioFile(forReading: fileURL)
+        
+        guard let file = audioFile else { return }
+        
+        // Get the file's processing format
+        let format = file.processingFormat
+        
+        // Reconnect nodes with the correct format
+        engine.disconnectNodeOutput(player)
+        if let eq = eqNode {
+            engine.disconnectNodeOutput(eq)
+            engine.connect(player, to: eq, format: format)
+            engine.connect(eq, to: engine.mainMixerNode, format: format)
+        }
+        
+        // Start the engine if not running
+        if !engine.isRunning {
+            try engine.start()
+        }
+        
+        // Schedule the file to play
+        player.scheduleFile(file, at: nil) { [weak self] in
+            DispatchQueue.main.async {
+                self?.handlePlaybackFinished()
+            }
+        }
+        
+        // Set volume
+        engine.mainMixerNode.outputVolume = volume
+        
+        // Apply current EQ settings
+        applyEQSettings()
     }
     
     private func loadStreamedTrack(_ track: Track, videoId: String) {
@@ -235,12 +357,18 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         audioPlayer?.stop()
         audioPlayer = nil
         
+        // Stop audio engine player node
+        playerNode?.stop()
+        audioFile = nil
+        
         streamPlayer?.pause()
         if let observer = streamPlayerObserver {
             (observer as? NSKeyValueObservation)?.invalidate()
         }
         streamPlayerObserver = nil
         streamPlayer = nil
+        
+        useAudioEngine = false
         
         NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
         NotificationCenter.default.removeObserver(self, name: .AVPlayerItemPlaybackStalled, object: nil)
@@ -249,6 +377,8 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     func play() {
         if isStreamingTrack {
             streamPlayer?.play()
+        } else if useAudioEngine {
+            playerNode?.play()
         } else {
             audioPlayer?.play()
         }
@@ -260,6 +390,8 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     func pause() {
         if isStreamingTrack {
             streamPlayer?.pause()
+        } else if useAudioEngine {
+            playerNode?.pause()
         } else {
             audioPlayer?.pause()
         }
@@ -290,6 +422,23 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         if isStreamingTrack {
             let cmTime = CMTime(seconds: time, preferredTimescale: 1000)
             streamPlayer?.seek(to: cmTime)
+        } else if useAudioEngine, let file = audioFile, let player = playerNode {
+            // Seek in audio engine
+            player.stop()
+            let sampleRate = file.processingFormat.sampleRate
+            let startFrame = AVAudioFramePosition(time * sampleRate)
+            let frameCount = AVAudioFrameCount(Double(file.length) - time * sampleRate)
+            
+            if frameCount > 0 {
+                player.scheduleSegment(file, startingFrame: startFrame, frameCount: frameCount, at: nil) { [weak self] in
+                    DispatchQueue.main.async {
+                        self?.handlePlaybackFinished()
+                    }
+                }
+                if isPlaying {
+                    player.play()
+                }
+            }
         } else {
             audioPlayer?.currentTime = time
         }
@@ -301,6 +450,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         volume = max(0, min(1, newVolume))
         audioPlayer?.volume = volume
         streamPlayer?.volume = volume
+        audioEngine?.mainMixerNode.outputVolume = volume
     }
     
     // MARK: - Queue Management
@@ -543,6 +693,20 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
             guard let player = streamPlayer else { return }
             newTime = CMTimeGetSeconds(player.currentTime())
             guard !newTime.isNaN && !newTime.isInfinite else { return }
+        } else if useAudioEngine {
+            // Get current time from audio engine player node
+            guard let player = playerNode,
+                  let nodeTime = player.lastRenderTime,
+                  let playerTime = player.playerTime(forNodeTime: nodeTime) else { return }
+            
+            guard let file = audioFile else { return }
+            newTime = Double(playerTime.sampleTime) / playerTime.sampleRate
+            
+            // Check if playback has finished
+            if newTime >= duration - 0.1 && isPlaying {
+                handlePlaybackFinished()
+                return
+            }
         } else {
             guard let player = audioPlayer else { return }
             newTime = player.currentTime
@@ -555,7 +719,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         }
         
         // Check for crossfade (local tracks only)
-        if !isStreamingTrack && crossfadeEnabled && !isCrossfading && duration > 0 {
+        if !isStreamingTrack && !useAudioEngine && crossfadeEnabled && !isCrossfading && duration > 0 {
             let timeRemaining = duration - newTime
             if timeRemaining <= crossfadeDuration && timeRemaining > 0 {
                 startCrossfade()
@@ -565,6 +729,13 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         // Update crossfade volumes
         if isCrossfading, let startTime = crossfadeStartTime {
             updateCrossfadeVolumes(startTime: startTime)
+        }
+    }
+    
+    private func handlePlaybackFinished() {
+        // Called when audio engine playback completes
+        DispatchQueue.main.async { [weak self] in
+            self?.audioPlayerDidFinishPlaying(AVAudioPlayer(), successfully: true)
         }
     }
     
