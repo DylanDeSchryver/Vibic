@@ -96,9 +96,6 @@ final class YouTubeService {
         "https://inv.nadeko.net"
     ]
     
-    // Track active prefetch tasks to avoid duplicates
-    private var prefetchTasks: [String: Task<Void, Never>] = [:]
-    
     private init() {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 15
@@ -356,38 +353,6 @@ final class YouTubeService {
         }
         
         throw lastError
-    }
-    
-    // MARK: - Prefetching
-    
-    /// Prefetch stream URLs for search results to reduce playback latency
-    func prefetchStreamURLs(for videoIds: [String]) {
-        // Only prefetch first 3 results to avoid excessive requests
-        let idsToFetch = Array(videoIds.prefix(3))
-        
-        for videoId in idsToFetch {
-            // Skip if already cached or being fetched
-            if streamCache[videoId] != nil { continue }
-            if prefetchTasks[videoId] != nil { continue }
-            
-            prefetchTasks[videoId] = Task(priority: .low) {
-                do {
-                    _ = try await getStreamURL(videoId: videoId)
-                    print("[YouTubeService] Prefetched stream URL for \(videoId)")
-                } catch {
-                    print("[YouTubeService] Prefetch failed for \(videoId): \(error.localizedDescription)")
-                }
-                prefetchTasks.removeValue(forKey: videoId)
-            }
-        }
-    }
-    
-    /// Cancel all prefetch tasks (e.g., when search results change)
-    func cancelPrefetching() {
-        for (_, task) in prefetchTasks {
-            task.cancel()
-        }
-        prefetchTasks.removeAll()
     }
     
     // MARK: - Stream URL Extraction

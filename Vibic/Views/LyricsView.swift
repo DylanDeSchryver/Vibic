@@ -4,6 +4,7 @@ struct LyricsView: View {
     @EnvironmentObject var playbackEngine: AudioPlaybackEngine
     @StateObject private var lyricsService = LyricsService.shared
     @State private var currentLineIndex: Int? = nil
+    @State private var lastUserSeekTime: Date? = nil
     @Namespace private var scrollNamespace
     @AppStorage("lyricsAutoScroll") private var lyricsAutoScroll = true
     @AppStorage("lyricsFontSize") private var lyricsFontSize = 1
@@ -100,7 +101,9 @@ struct LyricsView: View {
                         )
                         .id(index)
                         .onTapGesture {
-                            // Tap to seek to this line
+                            // Tap to seek to this line - set index and timestamp to prevent reset
+                            currentLineIndex = index
+                            lastUserSeekTime = Date()
                             playbackEngine.seek(to: line.time)
                         }
                     }
@@ -220,6 +223,12 @@ struct LyricsView: View {
     
     private func updateCurrentLine(time: Double) {
         guard lyricsService.hasSyncedLyrics else { return }
+        
+        // Ignore time updates briefly after user tap-to-seek to prevent reset
+        if let seekTime = lastUserSeekTime, Date().timeIntervalSince(seekTime) < 0.5 {
+            return
+        }
+        
         let newIndex = lyricsService.getCurrentLineIndex(at: time)
         if newIndex != currentLineIndex {
             currentLineIndex = newIndex
