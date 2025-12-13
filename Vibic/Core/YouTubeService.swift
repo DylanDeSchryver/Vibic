@@ -84,16 +84,18 @@ final class YouTubeService {
         set { UserDefaults.standard.set(newValue, forKey: "youtubeAPIKey") }
     }
     
-    // Piped instances for stream extraction (search is blocked but streams may work)
+    // Piped instances for stream extraction - server-side extraction is much faster
     private let pipedInstances = [
+        "https://pipedapi.kavin.rocks",
         "https://api.piped.private.coffee",
-        "https://pipedapi.kavin.rocks"
+        "https://pipedapi.adminforge.de",
+        "https://api.piped.yt"
     ]
     
     // Invidious instances for fallback
     private let invidiousInstances = [
-        "https://inv.perditum.com",
-        "https://inv.nadeko.net"
+        "https://inv.nadeko.net",
+        "https://invidious.io.lol"
     ]
     
     private init() {
@@ -364,7 +366,60 @@ final class YouTubeService {
             return cached.url
         }
         
-        // Use YouTubeKit for direct stream extraction (most reliable)
+        // Try Piped first - server-side extraction is much faster than client-side YouTubeKit
+        for instance in pipedInstances {
+            do {
+                let urlString = "\(instance)/streams/\(videoId)"
+                guard let url = URL(string: urlString) else { continue }
+                
+                var request = URLRequest(url: url)
+                request.timeoutInterval = 8
+                
+                let (data, response) = try await session.data(for: request)
+                
+                guard let httpResponse = response as? HTTPURLResponse,
+                      httpResponse.statusCode == 200 else { continue }
+                
+                if let streamURL = try parseStreamURL(from: data) {
+                    let expires = Date().addingTimeInterval(4 * 60 * 60)
+                    streamCache[videoId] = (streamURL, expires)
+                    print("[YouTubeService] Stream URL obtained via Piped: \(instance)")
+                    return streamURL
+                }
+            } catch {
+                print("[YouTubeService] Piped \(instance) failed: \(error.localizedDescription)")
+                continue
+            }
+        }
+        
+        // Try Invidious
+        for instance in invidiousInstances {
+            do {
+                let urlString = "\(instance)/api/v1/videos/\(videoId)"
+                guard let url = URL(string: urlString) else { continue }
+                
+                var request = URLRequest(url: url)
+                request.timeoutInterval = 8
+                
+                let (data, response) = try await session.data(for: request)
+                
+                guard let httpResponse = response as? HTTPURLResponse,
+                      httpResponse.statusCode == 200 else { continue }
+                
+                if let streamURL = try parseInvidiousStreamURL(from: data) {
+                    let expires = Date().addingTimeInterval(4 * 60 * 60)
+                    streamCache[videoId] = (streamURL, expires)
+                    print("[YouTubeService] Stream URL obtained via Invidious: \(instance)")
+                    return streamURL
+                }
+            } catch {
+                print("[YouTubeService] Invidious \(instance) failed: \(error.localizedDescription)")
+                continue
+            }
+        }
+        
+        // Fallback to YouTubeKit (slower due to client-side signature descrambling)
+        print("[YouTubeService] Trying YouTubeKit (this may take a few seconds)...")
         do {
             let video = YouTube(videoID: videoId)
             let streams = try await video.streams
@@ -404,60 +459,7 @@ final class YouTubeService {
             print("[YouTubeService] YouTubeKit extraction failed: \(error.localizedDescription)")
         }
         
-        // Fallback to Piped/Invidious APIs (may work for some videos)
-        var lastError: Error = YouTubeError.streamExtractionFailed
-        
-        for instance in pipedInstances {
-            do {
-                let urlString = "\(instance)/streams/\(videoId)"
-                guard let url = URL(string: urlString) else { continue }
-                
-                var request = URLRequest(url: url)
-                request.timeoutInterval = 15
-                
-                let (data, response) = try await session.data(for: request)
-                
-                guard let httpResponse = response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else { continue }
-                
-                if let streamURL = try parseStreamURL(from: data) {
-                    let expires = Date().addingTimeInterval(4 * 60 * 60)
-                    streamCache[videoId] = (streamURL, expires)
-                    print("[YouTubeService] Stream URL obtained via Piped: \(instance)")
-                    return streamURL
-                }
-            } catch {
-                lastError = error
-                continue
-            }
-        }
-        
-        for instance in invidiousInstances {
-            do {
-                let urlString = "\(instance)/api/v1/videos/\(videoId)"
-                guard let url = URL(string: urlString) else { continue }
-                
-                var request = URLRequest(url: url)
-                request.timeoutInterval = 15
-                
-                let (data, response) = try await session.data(for: request)
-                
-                guard let httpResponse = response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else { continue }
-                
-                if let streamURL = try parseInvidiousStreamURL(from: data) {
-                    let expires = Date().addingTimeInterval(4 * 60 * 60)
-                    streamCache[videoId] = (streamURL, expires)
-                    print("[YouTubeService] Stream URL obtained via Invidious: \(instance)")
-                    return streamURL
-                }
-            } catch {
-                lastError = error
-                continue
-            }
-        }
-        
-        throw lastError
+        throw YouTubeError.streamExtractionFailed
     }
     
     private func parseStreamURL(from data: Data) throws -> URL? {
