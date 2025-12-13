@@ -12,9 +12,12 @@ struct SettingsView: View {
     @AppStorage("lyricsAutoScroll") private var lyricsAutoScroll = true
     @AppStorage("lyricsFontSize") private var lyricsFontSize = 1 // 0=small, 1=medium, 2=large
     @AppStorage("youtubeAPIKey") private var youtubeAPIKey = ""
+    @AppStorage("acrCloudAccessKey") private var acrCloudAccessKey = ""
+    @AppStorage("acrCloudAccessSecret") private var acrCloudAccessSecret = ""
     
     @State private var showingResetAlert = false
     @State private var showingAPIKeyInfo = false
+    @State private var showingACRCloudInfo = false
     @State private var showingEqualizer = false
     
     @ObservedObject private var eqManager = EqualizerManager.shared
@@ -148,6 +151,45 @@ struct SettingsView: View {
                     Text("A free YouTube Data API key is required to search for music. The free tier allows 10,000 searches per day.")
                 }
                 
+                // MARK: - Music Recognition Section
+                Section {
+                    HStack {
+                        Text("ACRCloud Status")
+                        Spacer()
+                        if acrCloudAccessKey.isEmpty || acrCloudAccessSecret.isEmpty {
+                            Text("Not Set")
+                                .foregroundStyle(.red)
+                        } else {
+                            Text("Configured")
+                                .foregroundStyle(.green)
+                        }
+                    }
+                    
+                    SecureField("Access Key", text: $acrCloudAccessKey)
+                        .textContentType(.password)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                    
+                    SecureField("Access Secret", text: $acrCloudAccessSecret)
+                        .textContentType(.password)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                    
+                    Button {
+                        showingACRCloudInfo = true
+                    } label: {
+                        HStack {
+                            Text("How to Get ACRCloud Keys")
+                            Spacer()
+                            Image(systemName: "questionmark.circle")
+                        }
+                    }
+                } header: {
+                    Label("Music Recognition", systemImage: "waveform")
+                } footer: {
+                    Text("ACRCloud is used to identify songs playing around you. Free tier allows 100 identifications per day.")
+                }
+                
                 // MARK: - Lyrics Section
                 Section {
                     Toggle("Auto-scroll Lyrics", isOn: $lyricsAutoScroll)
@@ -226,6 +268,9 @@ struct SettingsView: View {
             .sheet(isPresented: $showingAPIKeyInfo) {
                 APIKeyInfoView()
             }
+            .sheet(isPresented: $showingACRCloudInfo) {
+                ACRCloudInfoView()
+            }
             .sheet(isPresented: $showingEqualizer) {
                 EqualizerView()
             }
@@ -267,6 +312,7 @@ struct SettingsView: View {
         crossfadeDuration = 3.0
         lyricsAutoScroll = true
         lyricsFontSize = 1
+        // Note: API keys are NOT reset for safety
         
         UIApplication.shared.isIdleTimerDisabled = false
         syncSettingsToEngine()
@@ -437,6 +483,114 @@ struct APIKeyInfoView: View {
                 .padding()
             }
             .navigationTitle("API Key Setup")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func instructionStep(number: Int, title: String, detail: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(Color.accentColor)
+                    .frame(width: 28, height: 28)
+                Text("\(number)")
+                    .font(.callout)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.white)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                Text(detail)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
+// MARK: - ACRCloud Info View
+
+struct ACRCloudInfoView: View {
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("How to Get Free ACRCloud Keys")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        instructionStep(
+                            number: 1,
+                            title: "Create an ACRCloud Account",
+                            detail: "Visit console.acrcloud.com and sign up for a free account."
+                        )
+                        
+                        instructionStep(
+                            number: 2,
+                            title: "Create a New Project",
+                            detail: "Click 'Create Project' and select 'Audio & Video Recognition'. Choose 'Music' as the recognition type."
+                        )
+                        
+                        instructionStep(
+                            number: 3,
+                            title: "Select a Region",
+                            detail: "Choose a region close to you (e.g., us-west-2). The default host will work for most users."
+                        )
+                        
+                        instructionStep(
+                            number: 4,
+                            title: "Copy Your Credentials",
+                            detail: "After creating the project, you'll see your Access Key and Access Secret. Copy both values."
+                        )
+                        
+                        instructionStep(
+                            number: 5,
+                            title: "Paste in Settings",
+                            detail: "Paste the Access Key and Access Secret in the fields above."
+                        )
+                    }
+                    
+                    Divider()
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Free Tier Limits")
+                            .font(.headline)
+                        
+                        Text("• 100 recognitions per day")
+                        Text("• No credit card required")
+                        Text("• Identifies most commercial music")
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    
+                    Link(destination: URL(string: "https://console.acrcloud.com")!) {
+                        HStack {
+                            Text("Open ACRCloud Console")
+                            Image(systemName: "arrow.up.right.square")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.accentColor)
+                        .foregroundStyle(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("ACRCloud Setup")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

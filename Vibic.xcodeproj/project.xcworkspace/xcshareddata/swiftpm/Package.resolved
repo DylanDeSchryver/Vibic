@@ -1,6 +1,15 @@
 {
-  "originHash" : "50332ce3348e9df07b56958b0969d255fad8020066430ec9bca8fca5d1da71ee",
+  "originHash" : "e0ba11a9b9b16446ab05d2bc1eaa6d0e623e541d3caeb089101b983789001237",
   "pins" : [
+    {
+      "identity" : "chromaswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wallisch/ChromaSwift",
+      "state" : {
+        "branch" : "master",
+        "revision" : "7c53f4370da03704ba76412c5a7214e7ab74be27"
+      }
+    },
     {
       "identity" : "youtubekit",
       "kind" : "remoteSourceControl",

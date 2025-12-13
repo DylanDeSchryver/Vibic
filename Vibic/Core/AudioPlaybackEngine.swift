@@ -697,9 +697,9 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
             // Get current time from audio engine player node
             guard let player = playerNode,
                   let nodeTime = player.lastRenderTime,
-                  let playerTime = player.playerTime(forNodeTime: nodeTime) else { return }
+                  let playerTime = player.playerTime(forNodeTime: nodeTime),
+                  audioFile != nil else { return }
             
-            guard let file = audioFile else { return }
             newTime = Double(playerTime.sampleTime) / playerTime.sampleRate
             
             // Check if playback has finished

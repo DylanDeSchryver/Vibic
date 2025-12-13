@@ -39,6 +39,8 @@
 		A1000030001 /* StreamSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000030100 /* StreamSearchView.swift */; };
 		FC3E931D2EED06BB000330B6 /* EqualizerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3E931C2EED06BB000330B6 /* EqualizerManager.swift */; };
 		FC3E931F2EED06CD000330B6 /* EqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3E931E2EED06CD000330B6 /* EqualizerView.swift */; };
+		FC3E93242EED22F5000330B6 /* ChromaSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FC3E93232EED22F5000330B6 /* ChromaSwift */; };
+		FC3E93262EED2376000330B6 /* MusicRecognitionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3E93252EED2376000330B6 /* MusicRecognitionService.swift */; };
 		FC8045362EECF1B700C3DC6C /* YouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = FC8045352EECF1B700C3DC6C /* YouTubeKit */; };
 		FCCF19B02EEBA67C00CF9E3A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */; };
 		FCCF19B22EEBA67C00CF9E3A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */; };
@@ -104,6 +106,7 @@
 		A1000030100 /* StreamSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamSearchView.swift; sourceTree = "<group>"; };
 		FC3E931C2EED06BB000330B6 /* EqualizerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerManager.swift; sourceTree = "<group>"; };
 		FC3E931E2EED06CD000330B6 /* EqualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerView.swift; sourceTree = "<group>"; };
+		FC3E93252EED2376000330B6 /* MusicRecognitionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicRecognitionService.swift; sourceTree = "<group>"; };
 		FCCF19AD2EEBA67B00CF9E3A /* VibicWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VibicWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -130,6 +133,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC3E93242EED22F5000330B6 /* ChromaSwift in Frameworks */,
 				FC8045362EECF1B700C3DC6C /* YouTubeKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -185,6 +189,7 @@
 		A1000024000 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				FC3E93252EED2376000330B6 /* MusicRecognitionService.swift */,
 				FC3E931C2EED06BB000330B6 /* EqualizerManager.swift */,
 				A1000005000 /* CoreDataManager.swift */,
 				A1000006000 /* AudioFileManager.swift */,
@@ -313,6 +318,7 @@
 			mainGroup = A1000021000;
 			packageReferences = (
 				FC8045342EECF1B700C3DC6C /* XCRemoteSwiftPackageReference "YouTubeKit" */,
+				FC3E93222EED22F5000330B6 /* XCRemoteSwiftPackageReference "ChromaSwift" */,
 			);
 			productRefGroup = A1000023000 /* Products */;
 			projectDirPath = "";
@@ -371,6 +377,7 @@
 				A1000023001 /* SplashScreenView.swift in Sources */,
 				A1000024001 /* NowPlayingShared.swift in Sources */,
 				FC3E931D2EED06BB000330B6 /* EqualizerManager.swift in Sources */,
+				FC3E93262EED2376000330B6 /* MusicRecognitionService.swift in Sources */,
 				A1000025001 /* QueueView.swift in Sources */,
 				A1000026001 /* ThemeManager.swift in Sources */,
 				A1000027001 /* ImageCache.swift in Sources */,
@@ -683,6 +690,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		FC3E93222EED22F5000330B6 /* XCRemoteSwiftPackageReference "ChromaSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/wallisch/ChromaSwift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		FC8045342EECF1B700C3DC6C /* XCRemoteSwiftPackageReference "YouTubeKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/alexeichhorn/YouTubeKit";
@@ -694,6 +709,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		FC3E93232EED22F5000330B6 /* ChromaSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC3E93222EED22F5000330B6 /* XCRemoteSwiftPackageReference "ChromaSwift" */;
+			productName = ChromaSwift;
+		};
 		FC8045352EECF1B700C3DC6C /* YouTubeKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FC8045342EECF1B700C3DC6C /* XCRemoteSwiftPackageReference "YouTubeKit" */;

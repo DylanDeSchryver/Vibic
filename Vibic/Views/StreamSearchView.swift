@@ -3,6 +3,7 @@ import SwiftUI
 struct StreamSearchView: View {
     @EnvironmentObject var libraryController: LibraryController
     @EnvironmentObject var playbackEngine: AudioPlaybackEngine
+    @StateObject private var musicRecognition = MusicRecognitionService.shared
     
     @State private var searchText = ""
     @State private var searchResults: [YouTubeSearchResult] = []
@@ -48,6 +49,10 @@ struct StreamSearchView: View {
         VStack(spacing: 16) {
             Spacer()
             
+            // Shazam Identify Button
+            shazamButton
+                .padding(.bottom, 20)
+            
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 60))
                 .foregroundStyle(.secondary)
@@ -79,6 +84,66 @@ struct StreamSearchView: View {
             }
             
             Spacer()
+        }
+        .onChange(of: musicRecognition.identifiedSong?.searchQuery) { oldValue, newValue in
+            if let query = newValue, !query.isEmpty {
+                // Auto-fill search and trigger search
+                searchText = query
+                performSearch()
+            }
+        }
+    }
+    
+    private var shazamButton: some View {
+        Button {
+            if musicRecognition.isListening {
+                musicRecognition.stopListening()
+            } else {
+                Task {
+                    await musicRecognition.startListening()
+                }
+            }
+        } label: {
+            VStack(spacing: 12) {
+                ZStack {
+                    // Progress ring
+                    if musicRecognition.isListening {
+                        Circle()
+                            .stroke(Color.accentColor.opacity(0.3), lineWidth: 4)
+                            .frame(width: 88, height: 88)
+                        
+                        Circle()
+                            .trim(from: 0, to: musicRecognition.recordingProgress)
+                            .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                            .frame(width: 88, height: 88)
+                            .rotationEffect(.degrees(-90))
+                            .animation(.linear(duration: 0.1), value: musicRecognition.recordingProgress)
+                    }
+                    
+                    Circle()
+                        .fill(musicRecognition.isListening ? Color.accentColor : Color(.tertiarySystemFill))
+                        .frame(width: 80, height: 80)
+                    
+                    Image(systemName: musicRecognition.isListening ? "waveform" : "music.note.list")
+                        .font(.system(size: 32))
+                        .foregroundStyle(musicRecognition.isListening ? Color.white : Color.accentColor)
+                        .symbolEffect(.variableColor.iterative, isActive: musicRecognition.isListening)
+                }
+                
+                Text(musicRecognition.isListening ? "Listening..." : "Identify Song")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundStyle(musicRecognition.isListening ? Color.accentColor : Color.primary)
+            }
+        }
+        .buttonStyle(.plain)
+        .alert("Identification Failed", isPresented: .init(
+            get: { musicRecognition.errorMessage != nil },
+            set: { if !$0 { musicRecognition.errorMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(musicRecognition.errorMessage ?? "")
         }
     }
     
@@ -156,9 +221,6 @@ struct StreamSearchView: View {
         
         searchTask = Task {
             do {
-                // Cancel any existing prefetch before new search
-                YouTubeService.shared.cancelPrefetching()
-                
                 let results = try await YouTubeService.shared.search(query: searchText)
                 
                 guard !Task.isCancelled else { return }
@@ -169,10 +231,6 @@ struct StreamSearchView: View {
                     }
                     searchResults = results
                     isSearching = false
-                    
-                    // Prefetch stream URLs for top results to speed up playback
-                    let videoIds = results.map { $0.id }
-                    YouTubeService.shared.prefetchStreamURLs(for: videoIds)
                 }
             } catch {
                 guard !Task.isCancelled else { return }
