@@ -37,6 +37,7 @@
 		A1000028001 /* LazyArtworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000028100 /* LazyArtworkView.swift */; };
 		A1000029001 /* YouTubeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000029100 /* YouTubeService.swift */; };
 		A1000030001 /* StreamSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000030100 /* StreamSearchView.swift */; };
+		FC8045362EECF1B700C3DC6C /* YouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = FC8045352EECF1B700C3DC6C /* YouTubeKit */; };
 		FCCF19B02EEBA67C00CF9E3A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19AF2EEBA67B00CF9E3A /* WidgetKit.framework */; };
 		FCCF19B22EEBA67C00CF9E3A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCF19B12EEBA67C00CF9E3A /* SwiftUI.framework */; };
 		FCCF19BF2EEBA67C00CF9E3A /* VibicWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCCF19AD2EEBA67B00CF9E3A /* VibicWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -125,6 +126,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC8045362EECF1B700C3DC6C /* YouTubeKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,6 +305,9 @@
 				Base,
 			);
 			mainGroup = A1000021000;
+			packageReferences = (
+				FC8045342EECF1B700C3DC6C /* XCRemoteSwiftPackageReference "YouTubeKit" */,
+			);
 			productRefGroup = A1000023000 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -668,6 +673,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FC8045342EECF1B700C3DC6C /* XCRemoteSwiftPackageReference "YouTubeKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/alexeichhorn/YouTubeKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FC8045352EECF1B700C3DC6C /* YouTubeKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FC8045342EECF1B700C3DC6C /* XCRemoteSwiftPackageReference "YouTubeKit" */;
+			productName = YouTubeKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		A1000004000 /* VibicModel.xcdatamodeld */ = {

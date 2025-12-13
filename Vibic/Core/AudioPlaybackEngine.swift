@@ -156,17 +156,31 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
                 
                 await MainActor.run {
                     let playerItem = AVPlayerItem(url: streamURL)
+                    
+                    // Configure for audio streaming
+                    playerItem.preferredForwardBufferDuration = 10
+                    
                     streamPlayer = AVPlayer(playerItem: playerItem)
                     streamPlayer?.volume = volume
+                    streamPlayer?.automaticallyWaitsToMinimizeStalling = true
                     
-                    // Observe when ready to play
+                    // Observe player item status for errors
                     streamPlayerObserver = playerItem.observe(\.status) { [weak self] item, _ in
-                        if item.status == .readyToPlay {
-                            DispatchQueue.main.async {
+                        DispatchQueue.main.async {
+                            switch item.status {
+                            case .readyToPlay:
                                 if let duration = self?.streamPlayer?.currentItem?.duration,
                                    duration.isNumeric {
                                     self?.duration = CMTimeGetSeconds(duration)
                                 }
+                            case .failed:
+                                print("[AudioPlaybackEngine] Stream playback failed: \(item.error?.localizedDescription ?? "Unknown error")")
+                                // Try next track if there's a queue
+                                if self?.queue.count ?? 0 > 1 {
+                                    self?.playNext()
+                                }
+                            default:
+                                break
                             }
                         }
                     }
@@ -179,17 +193,36 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
                         object: playerItem
                     )
                     
+                    // Observe for playback stalls
+                    NotificationCenter.default.addObserver(
+                        self,
+                        selector: #selector(streamPlayerStalled),
+                        name: .AVPlayerItemPlaybackStalled,
+                        object: playerItem
+                    )
+                    
                     // Auto-play
                     play()
                 }
             } catch {
-                print("Failed to load stream: \(error)")
+                print("[AudioPlaybackEngine] Failed to load stream: \(error)")
                 await MainActor.run {
-                    // Try next track on failure
-                    playNext()
+                    // Only try next track if there's a queue with more items
+                    if queue.count > 1 {
+                        playNext()
+                    } else {
+                        // Reset state if single track failed
+                        isPlaying = false
+                        stopDisplayLink()
+                    }
                 }
             }
         }
+    }
+    
+    @objc private func streamPlayerStalled(_ notification: Notification) {
+        print("[AudioPlaybackEngine] Stream playback stalled, attempting to resume...")
+        // AVPlayer should automatically resume when buffer is ready
     }
     
     @objc private func streamPlayerDidFinishPlaying(_ notification: Notification) {
@@ -210,6 +243,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         streamPlayer = nil
         
         NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemPlaybackStalled, object: nil)
     }
     
     func play() {

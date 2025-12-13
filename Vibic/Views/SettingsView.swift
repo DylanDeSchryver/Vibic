@@ -11,8 +11,10 @@ struct SettingsView: View {
     @AppStorage("crossfadeDuration") private var crossfadeDuration = 3.0
     @AppStorage("lyricsAutoScroll") private var lyricsAutoScroll = true
     @AppStorage("lyricsFontSize") private var lyricsFontSize = 1 // 0=small, 1=medium, 2=large
+    @AppStorage("youtubeAPIKey") private var youtubeAPIKey = ""
     
     @State private var showingResetAlert = false
+    @State private var showingAPIKeyInfo = false
     
     var body: some View {
         NavigationStack {
@@ -83,6 +85,40 @@ struct SettingsView: View {
                     Label("Appearance", systemImage: "paintbrush")
                 } footer: {
                     Text("Customize the app's accent color. Keep Screen Awake prevents dimming while playing.")
+                }
+                
+                // MARK: - Streaming Section
+                Section {
+                    HStack {
+                        Text("YouTube API Key")
+                        Spacer()
+                        if youtubeAPIKey.isEmpty {
+                            Text("Not Set")
+                                .foregroundStyle(.red)
+                        } else {
+                            Text("Configured")
+                                .foregroundStyle(.green)
+                        }
+                    }
+                    
+                    SecureField("Enter API Key", text: $youtubeAPIKey)
+                        .textContentType(.password)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                    
+                    Button {
+                        showingAPIKeyInfo = true
+                    } label: {
+                        HStack {
+                            Text("How to Get an API Key")
+                            Spacer()
+                            Image(systemName: "questionmark.circle")
+                        }
+                    }
+                } header: {
+                    Label("Music Search", systemImage: "magnifyingglass")
+                } footer: {
+                    Text("A free YouTube Data API key is required to search for music. The free tier allows 10,000 searches per day.")
                 }
                 
                 // MARK: - Lyrics Section
@@ -159,6 +195,9 @@ struct SettingsView: View {
                 }
             } message: {
                 Text("Are you sure you want to reset all settings to their default values?")
+            }
+            .sheet(isPresented: $showingAPIKeyInfo) {
+                APIKeyInfoView()
             }
         }
     }
@@ -292,6 +331,114 @@ struct ThemePickerView: View {
         }
         .navigationTitle("Theme Color")
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - API Key Info View
+
+struct APIKeyInfoView: View {
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    Text("How to Get a Free YouTube API Key")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    
+                    VStack(alignment: .leading, spacing: 16) {
+                        instructionStep(
+                            number: 1,
+                            title: "Go to Google Cloud Console",
+                            detail: "Visit console.cloud.google.com and sign in with your Google account."
+                        )
+                        
+                        instructionStep(
+                            number: 2,
+                            title: "Create a New Project",
+                            detail: "Click 'Select a Project' → 'New Project'. Name it anything (e.g., 'Vibic App')."
+                        )
+                        
+                        instructionStep(
+                            number: 3,
+                            title: "Enable YouTube Data API",
+                            detail: "Go to 'APIs & Services' → 'Library'. Search for 'YouTube Data API v3' and click 'Enable'."
+                        )
+                        
+                        instructionStep(
+                            number: 4,
+                            title: "Create API Credentials",
+                            detail: "Go to 'APIs & Services' → 'Credentials'. Click 'Create Credentials' → 'API Key'."
+                        )
+                        
+                        instructionStep(
+                            number: 5,
+                            title: "Copy Your API Key",
+                            detail: "Copy the generated API key and paste it in the Settings above."
+                        )
+                    }
+                    
+                    Divider()
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Free Tier Limits")
+                            .font(.headline)
+                        
+                        Text("• 10,000 units per day (about 100 searches)")
+                        Text("• No credit card required")
+                        Text("• Resets daily at midnight Pacific Time")
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    
+                    Link(destination: URL(string: "https://console.cloud.google.com")!) {
+                        HStack {
+                            Text("Open Google Cloud Console")
+                            Image(systemName: "arrow.up.right.square")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.accentColor)
+                        .foregroundStyle(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                }
+                .padding()
+            }
+            .navigationTitle("API Key Setup")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+    
+    private func instructionStep(number: Int, title: String, detail: String) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(Color.accentColor)
+                    .frame(width: 28, height: 28)
+                Text("\(number)")
+                    .font(.callout)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.white)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                Text(detail)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
     }
 }
 

@@ -156,9 +156,6 @@ struct StreamSearchView: View {
         
         searchTask = Task {
             do {
-                // Cancel any existing prefetch before new search
-                YouTubeService.shared.cancelPrefetching()
-                
                 let results = try await YouTubeService.shared.search(query: searchText)
                 
                 guard !Task.isCancelled else { return }
