@@ -291,9 +291,12 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
                         DispatchQueue.main.async {
                             switch item.status {
                             case .readyToPlay:
-                                if let duration = self?.streamPlayer?.currentItem?.duration,
-                                   duration.isNumeric {
-                                    self?.duration = CMTimeGetSeconds(duration)
+                                // Only update duration from AVPlayer if we don't have a valid one from track metadata
+                                // AVPlayer sometimes reports incorrect duration for some streams
+                                if let playerDuration = self?.streamPlayer?.currentItem?.duration,
+                                   playerDuration.isNumeric,
+                                   (self?.duration ?? 0) <= 0 {
+                                    self?.duration = CMTimeGetSeconds(playerDuration)
                                 }
                             case .failed:
                                 print("[AudioPlaybackEngine] Stream playback failed: \(item.error?.localizedDescription ?? "Unknown error")")
