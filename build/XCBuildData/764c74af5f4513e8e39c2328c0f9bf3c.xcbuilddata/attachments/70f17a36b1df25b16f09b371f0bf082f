@@ -1,0 +1,31 @@
+{
+  "" : {
+    "const-values" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/ChromaSwift-primary.swiftconstvalues",
+    "dependencies" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/ChromaSwift-primary.d",
+    "diagnostics" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/ChromaSwift-primary.dia",
+    "emit-module-dependencies" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/ChromaSwift-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/ChromaSwift-primary-emit-module.dia",
+    "pch" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/ChromaSwift-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/ChromaSwift-primary.swiftdeps"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/Sources/ChromaSwift/AcoustID.swift" : {
+    "index-unit-output-path" : "/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/AcoustID.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/AcoustID.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/AcoustID.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/Sources/ChromaSwift/AudioDecoder.swift" : {
+    "index-unit-output-path" : "/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/AudioDecoder.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/AudioDecoder.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/AudioDecoder.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/Sources/ChromaSwift/AudioFingerprint.swift" : {
+    "index-unit-output-path" : "/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/AudioFingerprint.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/AudioFingerprint.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/AudioFingerprint.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/Sources/ChromaSwift/URLSessionProtocol.swift" : {
+    "index-unit-output-path" : "/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/URLSessionProtocol.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/URLSessionProtocol.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/build/ChromaSwift.build/Release-iphoneos/ChromaSwift.build/Objects-normal/arm64/URLSessionProtocol.o"
+  }
+}

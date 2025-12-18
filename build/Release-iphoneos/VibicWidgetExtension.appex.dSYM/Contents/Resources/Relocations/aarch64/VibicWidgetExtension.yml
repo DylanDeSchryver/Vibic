@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/dylan/Coding Projects/Vibic/build/Release-iphoneos/VibicWidgetExtension.appex/VibicWidgetExtension'
+relocations:     []
+...

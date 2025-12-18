@@ -1,30 +1,46 @@
 import SwiftUI
 
 struct StreamSearchView: View {
-    @EnvironmentObject var libraryController: LibraryController
-    @EnvironmentObject var playbackEngine: AudioPlaybackEngine
     @StateObject private var musicRecognition = MusicRecognitionService.shared
     
     @State private var searchText = ""
     @State private var searchResults: [YouTubeSearchResult] = []
     @State private var isSearching = false
     @State private var errorMessage: String?
-    @State private var addedVideoIds: Set<String> = []
-    @State private var loadingVideoId: String?
     @State private var searchTask: Task<Void, Never>?
     @State private var showingSettings = false
+    @State private var selectedVideo: YouTubeSearchResult?
     
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                if searchResults.isEmpty && !isSearching && searchText.isEmpty {
-                    emptyStateView
-                } else if isSearching {
-                    loadingView
-                } else if let error = errorMessage, searchResults.isEmpty {
-                    errorView(error)
-                } else {
-                    resultsList
+            ZStack(alignment: .bottom) {
+                VStack(spacing: 0) {
+                    if searchResults.isEmpty && !isSearching && searchText.isEmpty {
+                        emptyStateView
+                    } else if isSearching {
+                        loadingView
+                    } else if let error = errorMessage, searchResults.isEmpty {
+                        errorView(error)
+                    } else {
+                        resultsList
+                    }
+                }
+                
+                // Micro player overlay
+                if let video = selectedVideo {
+                    YouTubeMicroPlayer(
+                        videoId: video.id,
+                        title: video.title,
+                        artist: video.artist,
+                        thumbnailURL: video.thumbnailURL,
+                        onClose: {
+                            withAnimation {
+                                selectedVideo = nil
+                            }
+                        }
+                    )
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                    .padding(.bottom, 8)
                 }
             }
             .navigationTitle("Search")
@@ -76,7 +92,7 @@ struct StreamSearchView: View {
                 .buttonStyle(.borderedProminent)
                 .padding(.top, 8)
             } else {
-                Text("Find songs to add to your library.\nStreamed tracks work just like your imported music.")
+                Text("Find songs and stream them instantly.\nTap play to open the embedded player.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -194,13 +210,8 @@ struct StreamSearchView: View {
     private var resultsList: some View {
         List {
             ForEach(searchResults) { result in
-                SearchResultRow(
+                StreamSearchResultRow(
                     result: result,
-                    isInLibrary: libraryController.isTrackInLibrary(videoId: result.id) || addedVideoIds.contains(result.id),
-                    isLoading: loadingVideoId == result.id,
-                    onAdd: {
-                        addToLibrary(result)
-                    },
                     onPlay: {
                         playResult(result)
                     }
@@ -243,113 +254,64 @@ struct StreamSearchView: View {
         }
     }
     
-    private func addToLibrary(_ result: YouTubeSearchResult) {
-        addedVideoIds.insert(result.id)
-        
-        libraryController.addStreamedTrack(from: result) { _ in
-            // Track added successfully - UI updates via addedVideoIds
-        }
-    }
-    
     private func playResult(_ result: YouTubeSearchResult) {
-        // Show loading indicator
-        loadingVideoId = result.id
-        
-        // Add to library if not already
-        if !libraryController.isTrackInLibrary(videoId: result.id) {
-            addedVideoIds.insert(result.id)
-        }
-        
-        libraryController.addStreamedTrack(from: result) { [self] track in
-            if let track = track {
-                playbackEngine.playTrack(track)
-            }
-            // Clear loading state
-            DispatchQueue.main.async {
-                loadingVideoId = nil
-            }
+        // Open the embedded micro player instead of extracting audio
+        withAnimation {
+            selectedVideo = result
         }
     }
 }
 
-// MARK: - Search Result Row
+// MARK: - Stream Search Result Row
 
-struct SearchResultRow: View {
+struct StreamSearchResultRow: View {
     let result: YouTubeSearchResult
-    let isInLibrary: Bool
-    var isLoading: Bool = false
-    let onAdd: () -> Void
     let onPlay: () -> Void
     
     @State private var thumbnailImage: UIImage?
     @State private var isLoadingThumbnail = false
     
     var body: some View {
-        HStack(spacing: 12) {
-            // Thumbnail
-            thumbnailView
-            
-            // Info
-            VStack(alignment: .leading, spacing: 4) {
-                Text(result.title)
-                    .font(.body)
-                    .lineLimit(2)
-                
-                HStack(spacing: 4) {
-                    Text(result.artist)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                    
-                    if let duration = result.duration {
-                        Text("•")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        
-                        Text(duration)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-            }
-            
-            Spacer()
-            
-            // Actions
+        Button(action: onPlay) {
             HStack(spacing: 12) {
-                Button {
-                    if !isLoading {
-                        onPlay()
-                    }
-                } label: {
-                    if isLoading {
-                        ProgressView()
-                            .scaleEffect(0.8)
-                            .frame(width: 28, height: 28)
-                    } else {
-                        Image(systemName: "play.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(Color.accentColor)
-                    }
-                }
-                .buttonStyle(.plain)
-                .disabled(isLoading)
+                // Thumbnail
+                thumbnailView
                 
-                Button {
-                    if !isInLibrary {
-                        onAdd()
+                // Info
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(result.title)
+                        .font(.body)
+                        .foregroundStyle(.primary)
+                        .lineLimit(2)
+                    
+                    HStack(spacing: 4) {
+                        Text(result.artist)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                        
+                        if let duration = result.duration {
+                            Text("•")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            
+                            Text(duration)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
-                } label: {
-                    Image(systemName: isInLibrary ? "checkmark.circle.fill" : "plus.circle")
-                        .font(.title2)
-                        .foregroundStyle(isInLibrary ? Color.green : Color.accentColor)
                 }
-                .buttonStyle(.plain)
-                .disabled(isInLibrary)
+                
+                Spacer()
+                
+                // Play icon
+                Image(systemName: "play.circle.fill")
+                    .font(.title2)
+                    .foregroundStyle(Color.accentColor)
             }
+            .padding(.vertical, 4)
         }
-        .padding(.vertical, 4)
-        .opacity(isLoading ? 0.7 : 1.0)
+        .buttonStyle(.plain)
         .task {
             await loadThumbnail()
         }
@@ -400,6 +362,4 @@ struct SearchResultRow: View {
 
 #Preview {
     StreamSearchView()
-        .environmentObject(LibraryController.shared)
-        .environmentObject(AudioPlaybackEngine.shared)
 }

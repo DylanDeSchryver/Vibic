@@ -37,6 +37,7 @@
 		A1000028001 /* LazyArtworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000028100 /* LazyArtworkView.swift */; };
 		A1000029001 /* YouTubeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000029100 /* YouTubeService.swift */; };
 		A1000030001 /* StreamSearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000030100 /* StreamSearchView.swift */; };
+		FC1232742EF47C5600F371C3 /* YouTubeEmbedPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC1232732EF47C5600F371C3 /* YouTubeEmbedPlayer.swift */; };
 		FC3E931D2EED06BB000330B6 /* EqualizerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3E931C2EED06BB000330B6 /* EqualizerManager.swift */; };
 		FC3E931F2EED06CD000330B6 /* EqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC3E931E2EED06CD000330B6 /* EqualizerView.swift */; };
 		FC3E93242EED22F5000330B6 /* ChromaSwift in Frameworks */ = {isa = PBXBuildFile; productRef = FC3E93232EED22F5000330B6 /* ChromaSwift */; };
@@ -104,6 +105,7 @@
 		A1000028100 /* LazyArtworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyArtworkView.swift; sourceTree = "<group>"; };
 		A1000029100 /* YouTubeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeService.swift; sourceTree = "<group>"; };
 		A1000030100 /* StreamSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamSearchView.swift; sourceTree = "<group>"; };
+		FC1232732EF47C5600F371C3 /* YouTubeEmbedPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeEmbedPlayer.swift; sourceTree = "<group>"; };
 		FC3E931C2EED06BB000330B6 /* EqualizerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerManager.swift; sourceTree = "<group>"; };
 		FC3E931E2EED06CD000330B6 /* EqualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EqualizerView.swift; sourceTree = "<group>"; };
 		FC3E93252EED2376000330B6 /* MusicRecognitionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicRecognitionService.swift; sourceTree = "<group>"; };
@@ -208,6 +210,7 @@
 		A1000025000 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FC1232732EF47C5600F371C3 /* YouTubeEmbedPlayer.swift */,
 				FC3E931E2EED06CD000330B6 /* EqualizerView.swift */,
 				A1000010000 /* LibraryView.swift */,
 				A1000011000 /* FileBrowserView.swift */,
@@ -364,6 +367,7 @@
 				A1000009001 /* AudioPlaybackEngine.swift in Sources */,
 				A1000010001 /* LibraryView.swift in Sources */,
 				A1000011001 /* FileBrowserView.swift in Sources */,
+				FC1232742EF47C5600F371C3 /* YouTubeEmbedPlayer.swift in Sources */,
 				A1000012001 /* PlaylistView.swift in Sources */,
 				A1000013001 /* PlayerView.swift in Sources */,
 				A1000014001 /* MiniPlayerView.swift in Sources */,
@@ -535,11 +539,12 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5TTNP6MWRX;
+				DEVELOPMENT_TEAM = 5GDMGZQR8W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vibic/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Vibic needs microphone access to identify songs playing around you using Shazam.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -550,7 +555,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.vibic.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vibic.app.player;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -569,11 +574,12 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5TTNP6MWRX;
+				DEVELOPMENT_TEAM = 5GDMGZQR8W;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vibic/Info.plist;
 				INFOPLIST_KEY_LSSupportsOpeningDocumentsInPlace = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Vibic needs microphone access to identify songs playing around you using Shazam.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -584,7 +590,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.vibic.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vibic.app.player;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -601,7 +607,7 @@
 				CODE_SIGN_ENTITLEMENTS = VibicWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5TTNP6MWRX;
+				DEVELOPMENT_TEAM = 5GDMGZQR8W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VibicWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = VibicWidget;
@@ -613,7 +619,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.vibic.app.VibicWidget;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vibic.app.player.VibicWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -633,7 +639,7 @@
 				CODE_SIGN_ENTITLEMENTS = VibicWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5TTNP6MWRX;
+				DEVELOPMENT_TEAM = 5GDMGZQR8W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = VibicWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = VibicWidget;
@@ -645,7 +651,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.vibic.app.VibicWidget;
+				PRODUCT_BUNDLE_IDENTIFIER = com.vibic.app.player.VibicWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

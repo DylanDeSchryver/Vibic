@@ -1,0 +1,4 @@
+module CChromaprint {
+umbrella "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/ChromaSwift/Sources/CChromaprint/include"
+export *
+}

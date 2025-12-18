@@ -1,0 +1,4 @@
+module ChromaSwift {
+header "ChromaSwift-Swift.h"
+export *
+}

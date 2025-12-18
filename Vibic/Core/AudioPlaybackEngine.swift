@@ -8,9 +8,6 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     static let shared = AudioPlaybackEngine()
     
     private var audioPlayer: AVAudioPlayer?
-    private var streamPlayer: AVPlayer?
-    private var streamPlayerObserver: Any?
-    private var isStreamingTrack = false
     private var displayLink: CADisplayLink?
     private var cancellables = Set<AnyCancellable>()
     
@@ -182,13 +179,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     // MARK: - Playback Control
     
     func loadTrack(_ track: Track) {
-        // Handle streamed tracks
-        if track.isStreamedTrack, let videoId = track.videoId {
-            loadStreamedTrack(track, videoId: videoId)
-            return
-        }
-        
-        // Handle local tracks
+        // Handle local tracks only - streaming is done via embedded player
         guard let filePath = track.filePath else { return }
         let fileURL = URL(fileURLWithPath: filePath)
         
@@ -197,7 +188,6 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         
         do {
             stopAllPlayers()
-            isStreamingTrack = false
             
             if eqEnabled {
                 // Use AVAudioEngine for EQ processing
@@ -264,100 +254,6 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         applyEQSettings()
     }
     
-    private func loadStreamedTrack(_ track: Track, videoId: String) {
-        stopAllPlayers()
-        isStreamingTrack = true
-        currentTrack = track
-        duration = track.duration
-        currentTime = 0
-        
-        // Show loading state
-        updateNowPlayingInfo()
-        
-        Task {
-            do {
-                let streamURL = try await YouTubeService.shared.getStreamURL(videoId: videoId)
-                
-                await MainActor.run {
-                    let playerItem = AVPlayerItem(url: streamURL)
-                    
-                    // Configure for audio streaming
-                    playerItem.preferredForwardBufferDuration = 10
-                    
-                    streamPlayer = AVPlayer(playerItem: playerItem)
-                    streamPlayer?.volume = volume
-                    streamPlayer?.automaticallyWaitsToMinimizeStalling = true
-                    
-                    // Observe player item status for errors
-                    streamPlayerObserver = playerItem.observe(\.status) { [weak self] item, _ in
-                        DispatchQueue.main.async {
-                            switch item.status {
-                            case .readyToPlay:
-                                // Only update duration from AVPlayer if we don't have a valid one from track metadata
-                                // AVPlayer sometimes reports incorrect duration for some streams
-                                if let playerDuration = self?.streamPlayer?.currentItem?.duration,
-                                   playerDuration.isNumeric,
-                                   (self?.duration ?? 0) <= 0 {
-                                    self?.duration = CMTimeGetSeconds(playerDuration)
-                                }
-                            case .failed:
-                                print("[AudioPlaybackEngine] Stream playback failed: \(item.error?.localizedDescription ?? "Unknown error")")
-                                // Try next track if there's a queue
-                                if self?.queue.count ?? 0 > 1 {
-                                    self?.playNext()
-                                }
-                            default:
-                                break
-                            }
-                        }
-                    }
-                    
-                    // Observe when playback ends
-                    NotificationCenter.default.addObserver(
-                        self,
-                        selector: #selector(streamPlayerDidFinishPlaying),
-                        name: .AVPlayerItemDidPlayToEndTime,
-                        object: playerItem
-                    )
-                    
-                    // Observe for playback stalls
-                    NotificationCenter.default.addObserver(
-                        self,
-                        selector: #selector(streamPlayerStalled),
-                        name: .AVPlayerItemPlaybackStalled,
-                        object: playerItem
-                    )
-                    
-                    // Auto-play
-                    play()
-                }
-            } catch {
-                print("[AudioPlaybackEngine] Failed to load stream: \(error)")
-                await MainActor.run {
-                    // Only try next track if there's a queue with more items
-                    if queue.count > 1 {
-                        playNext()
-                    } else {
-                        // Reset state if single track failed
-                        isPlaying = false
-                        stopDisplayLink()
-                    }
-                }
-            }
-        }
-    }
-    
-    @objc private func streamPlayerStalled(_ notification: Notification) {
-        print("[AudioPlaybackEngine] Stream playback stalled, attempting to resume...")
-        // AVPlayer should automatically resume when buffer is ready
-    }
-    
-    @objc private func streamPlayerDidFinishPlaying(_ notification: Notification) {
-        DispatchQueue.main.async { [weak self] in
-            self?.playNext()
-        }
-    }
-    
     private func stopAllPlayers() {
         audioPlayer?.stop()
         audioPlayer = nil
@@ -366,23 +262,11 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         playerNode?.stop()
         audioFile = nil
         
-        streamPlayer?.pause()
-        if let observer = streamPlayerObserver {
-            (observer as? NSKeyValueObservation)?.invalidate()
-        }
-        streamPlayerObserver = nil
-        streamPlayer = nil
-        
         useAudioEngine = false
-        
-        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemDidPlayToEndTime, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .AVPlayerItemPlaybackStalled, object: nil)
     }
     
     func play() {
-        if isStreamingTrack {
-            streamPlayer?.play()
-        } else if useAudioEngine {
+        if useAudioEngine {
             playerNode?.play()
         } else {
             audioPlayer?.play()
@@ -393,9 +277,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     }
     
     func pause() {
-        if isStreamingTrack {
-            streamPlayer?.pause()
-        } else if useAudioEngine {
+        if useAudioEngine {
             playerNode?.pause()
         } else {
             audioPlayer?.pause()
@@ -416,7 +298,6 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     func stop() {
         cancelCrossfade()
         stopAllPlayers()
-        isStreamingTrack = false
         isPlaying = false
         currentTime = 0
         stopDisplayLink()
@@ -424,10 +305,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     }
     
     func seek(to time: Double) {
-        if isStreamingTrack {
-            let cmTime = CMTime(seconds: time, preferredTimescale: 1000)
-            streamPlayer?.seek(to: cmTime)
-        } else if useAudioEngine, let file = audioFile, let player = playerNode {
+        if useAudioEngine, let file = audioFile, let player = playerNode {
             // Seek in audio engine
             player.stop()
             audioEngineSeekOffset = time // Store seek position
@@ -455,7 +333,6 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     func setVolume(_ newVolume: Float) {
         volume = max(0, min(1, newVolume))
         audioPlayer?.volume = volume
-        streamPlayer?.volume = volume
         audioEngine?.mainMixerNode.outputVolume = volume
     }
     
@@ -695,11 +572,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
     @objc private func updatePlaybackTime() {
         let newTime: Double
         
-        if isStreamingTrack {
-            guard let player = streamPlayer else { return }
-            newTime = CMTimeGetSeconds(player.currentTime())
-            guard !newTime.isNaN && !newTime.isInfinite else { return }
-        } else if useAudioEngine {
+        if useAudioEngine {
             // Get current time from audio engine player node
             guard let player = playerNode,
                   let nodeTime = player.lastRenderTime,
@@ -726,7 +599,7 @@ final class AudioPlaybackEngine: NSObject, ObservableObject {
         }
         
         // Check for crossfade (local tracks only)
-        if !isStreamingTrack && !useAudioEngine && crossfadeEnabled && !isCrossfading && duration > 0 {
+        if !useAudioEngine && crossfadeEnabled && !isCrossfading && duration > 0 {
             let timeRemaining = duration - newTime
             if timeRemaining <= crossfadeDuration && timeRemaining > 0 {
                 startCrossfade()

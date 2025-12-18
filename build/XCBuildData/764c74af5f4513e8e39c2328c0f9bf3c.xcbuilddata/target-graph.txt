@@ -1,0 +1,18 @@
+Target dependency graph (8 targets)
+Target 'Vibic' in project 'Vibic'
+➜ Explicit dependency on target 'VibicWidgetExtension' in project 'Vibic'
+➜ Explicit dependency on target 'ChromaSwift' in project 'ChromaSwift'
+➜ Explicit dependency on target 'YouTubeKit' in project 'YouTubeKit'
+Target 'YouTubeKit' in project 'YouTubeKit'
+➜ Explicit dependency on target 'YouTubeKit' in project 'YouTubeKit'
+➜ Explicit dependency on target 'YouTubeKit_YouTubeKit' in project 'YouTubeKit'
+Target 'YouTubeKit' in project 'YouTubeKit'
+➜ Explicit dependency on target 'YouTubeKit_YouTubeKit' in project 'YouTubeKit'
+Target 'YouTubeKit_YouTubeKit' in project 'YouTubeKit' (no dependencies)
+Target 'ChromaSwift' in project 'ChromaSwift'
+➜ Explicit dependency on target 'ChromaSwift' in project 'ChromaSwift'
+➜ Explicit dependency on target 'CChromaprint' in project 'ChromaSwift'
+Target 'ChromaSwift' in project 'ChromaSwift'
+➜ Explicit dependency on target 'CChromaprint' in project 'ChromaSwift'
+Target 'CChromaprint' in project 'ChromaSwift' (no dependencies)
+Target 'VibicWidgetExtension' in project 'Vibic' (no dependencies)

@@ -1,0 +1,56 @@
+{
+  "source": "/Users/dylan/Coding Projects/Vibic/VibicWidget/PlaybackIntents.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Play/Pause",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 12
+        }
+      },
+      {
+        "comment": "",
+        "key": "Toggle play/pause",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 13
+        }
+      },
+      {
+        "comment": "",
+        "key": "Next Track",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 27
+        }
+      },
+      {
+        "comment": "",
+        "key": "Skip to next track",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 28
+        }
+      },
+      {
+        "comment": "",
+        "key": "Previous Track",
+        "location": {
+          "startingColumn": 49,
+          "startingLine": 41
+        }
+      },
+      {
+        "comment": "",
+        "key": "Skip to previous track",
+        "location": {
+          "startingColumn": 48,
+          "startingLine": 42
+        }
+      }
+    ]
+  },
+  "version": 1
+}

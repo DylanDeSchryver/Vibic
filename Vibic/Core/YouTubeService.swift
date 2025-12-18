@@ -1,6 +1,4 @@
 import Foundation
-import AVFoundation
-import YouTubeKit
 
 // MARK: - YouTube Search Result
 
@@ -63,20 +61,12 @@ struct YouTubeSearchResult: Identifiable, Codable, Hashable {
     }
 }
 
-// MARK: - Stream Info
-
-struct StreamInfo {
-    let audioURL: URL
-    let expiresAt: Date?
-}
-
 // MARK: - YouTube Service
 
 final class YouTubeService {
     static let shared = YouTubeService()
     
     private let session: URLSession
-    private var streamCache: [String: (url: URL, expires: Date)] = [:]
     
     // YouTube Data API key - user can set this in Settings
     var apiKey: String? {
@@ -84,7 +74,7 @@ final class YouTubeService {
         set { UserDefaults.standard.set(newValue, forKey: "youtubeAPIKey") }
     }
     
-    // Piped instances for stream extraction - server-side extraction is much faster
+    // Piped instances for search fallback only
     private let pipedInstances = [
         "https://pipedapi.kavin.rocks",
         "https://api.piped.private.coffee",
@@ -92,7 +82,7 @@ final class YouTubeService {
         "https://api.piped.yt"
     ]
     
-    // Invidious instances for fallback
+    // Invidious instances for search fallback only
     private let invidiousInstances = [
         "https://inv.nadeko.net",
         "https://invidious.io.lol"
@@ -357,222 +347,6 @@ final class YouTubeService {
         throw lastError
     }
     
-    // MARK: - Stream URL Extraction
-    
-    func getStreamURL(videoId: String) async throws -> URL {
-        // Check cache first
-        if let cached = streamCache[videoId], cached.expires > Date() {
-            print("[YouTubeService] Using cached stream URL for \(videoId)")
-            return cached.url
-        }
-        
-        // Try Piped first - server-side extraction is much faster than client-side YouTubeKit
-        for instance in pipedInstances {
-            do {
-                let urlString = "\(instance)/streams/\(videoId)"
-                guard let url = URL(string: urlString) else { continue }
-                
-                var request = URLRequest(url: url)
-                request.timeoutInterval = 8
-                
-                let (data, response) = try await session.data(for: request)
-                
-                guard let httpResponse = response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else { continue }
-                
-                if let streamURL = try parseStreamURL(from: data) {
-                    let expires = Date().addingTimeInterval(4 * 60 * 60)
-                    streamCache[videoId] = (streamURL, expires)
-                    print("[YouTubeService] Stream URL obtained via Piped: \(instance)")
-                    return streamURL
-                }
-            } catch {
-                print("[YouTubeService] Piped \(instance) failed: \(error.localizedDescription)")
-                continue
-            }
-        }
-        
-        // Try Invidious
-        for instance in invidiousInstances {
-            do {
-                let urlString = "\(instance)/api/v1/videos/\(videoId)"
-                guard let url = URL(string: urlString) else { continue }
-                
-                var request = URLRequest(url: url)
-                request.timeoutInterval = 8
-                
-                let (data, response) = try await session.data(for: request)
-                
-                guard let httpResponse = response as? HTTPURLResponse,
-                      httpResponse.statusCode == 200 else { continue }
-                
-                if let streamURL = try parseInvidiousStreamURL(from: data) {
-                    let expires = Date().addingTimeInterval(4 * 60 * 60)
-                    streamCache[videoId] = (streamURL, expires)
-                    print("[YouTubeService] Stream URL obtained via Invidious: \(instance)")
-                    return streamURL
-                }
-            } catch {
-                print("[YouTubeService] Invidious \(instance) failed: \(error.localizedDescription)")
-                continue
-            }
-        }
-        
-        // Fallback to YouTubeKit (slower due to client-side signature descrambling)
-        print("[YouTubeService] Trying YouTubeKit (this may take a few seconds)...")
-        do {
-            let video = YouTube(videoID: videoId)
-            let streams = try await video.streams
-            
-            // Get best audio-only stream (M4A preferred for iOS)
-            if let audioStream = streams
-                .filterAudioOnly()
-                .filter({ $0.fileExtension == .m4a })
-                .highestAudioBitrateStream() {
-                
-                let expires = Date().addingTimeInterval(4 * 60 * 60)
-                streamCache[videoId] = (audioStream.url, expires)
-                print("[YouTubeService] Stream URL obtained via YouTubeKit (m4a audio)")
-                return audioStream.url
-            }
-            
-            // Fallback to any audio stream
-            if let audioStream = streams.filterAudioOnly().highestAudioBitrateStream() {
-                let expires = Date().addingTimeInterval(4 * 60 * 60)
-                streamCache[videoId] = (audioStream.url, expires)
-                print("[YouTubeService] Stream URL obtained via YouTubeKit (audio)")
-                return audioStream.url
-            }
-            
-            // Last resort: video with audio
-            if let videoStream = streams
-                .filterVideoAndAudio()
-                .filter({ $0.isNativelyPlayable })
-                .first {
-                
-                let expires = Date().addingTimeInterval(4 * 60 * 60)
-                streamCache[videoId] = (videoStream.url, expires)
-                print("[YouTubeService] Stream URL obtained via YouTubeKit (video+audio)")
-                return videoStream.url
-            }
-        } catch {
-            print("[YouTubeService] YouTubeKit extraction failed: \(error.localizedDescription)")
-        }
-        
-        throw YouTubeError.streamExtractionFailed
-    }
-    
-    private func parseStreamURL(from data: Data) throws -> URL? {
-        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            return nil
-        }
-        
-        // Look for audio streams first (better for music, less bandwidth)
-        if let audioStreams = json["audioStreams"] as? [[String: Any]], !audioStreams.isEmpty {
-            // Sort by bitrate, prefer highest quality
-            let sorted = audioStreams.sorted { a, b in
-                (a["bitrate"] as? Int ?? 0) > (b["bitrate"] as? Int ?? 0)
-            }
-            
-            // Prefer M4A/AAC format for better iOS compatibility
-            for stream in sorted {
-                if let mimeType = stream["mimeType"] as? String,
-                   (mimeType.contains("mp4") || mimeType.contains("m4a") || mimeType.contains("aac")),
-                   let urlString = stream["url"] as? String,
-                   let url = URL(string: urlString) {
-                    print("[YouTubeService] Selected audio stream: \(mimeType), bitrate: \(stream["bitrate"] ?? "?")")
-                    return url
-                }
-            }
-            
-            // Fallback to any audio stream
-            for stream in sorted {
-                if let urlString = stream["url"] as? String,
-                   let url = URL(string: urlString) {
-                    print("[YouTubeService] Selected fallback audio stream")
-                    return url
-                }
-            }
-        }
-        
-        // Fallback to HLS stream (adaptive streaming)
-        if let hlsString = json["hls"] as? String,
-           let hlsURL = URL(string: hlsString) {
-            print("[YouTubeService] Using HLS stream")
-            return hlsURL
-        }
-        
-        // Last resort: try video streams with audio
-        if let videoStreams = json["videoStreams"] as? [[String: Any]] {
-            for stream in videoStreams {
-                if let hasAudio = stream["videoOnly"] as? Bool, !hasAudio,
-                   let urlString = stream["url"] as? String,
-                   let url = URL(string: urlString) {
-                    print("[YouTubeService] Using video stream with audio")
-                    return url
-                }
-            }
-        }
-        
-        return nil
-    }
-    
-    private func parseInvidiousStreamURL(from data: Data) throws -> URL? {
-        guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
-            return nil
-        }
-        
-        // Invidious uses "adaptiveFormats" for audio/video streams
-        if let adaptiveFormats = json["adaptiveFormats"] as? [[String: Any]] {
-            // Filter for audio-only streams
-            let audioStreams = adaptiveFormats.filter { format in
-                if let type = format["type"] as? String {
-                    return type.hasPrefix("audio/")
-                }
-                return false
-            }
-            
-            // Sort by bitrate
-            let sorted = audioStreams.sorted { a, b in
-                let bitrateA = (a["bitrate"] as? String).flatMap { Int($0) } ?? 0
-                let bitrateB = (b["bitrate"] as? String).flatMap { Int($0) } ?? 0
-                return bitrateA > bitrateB
-            }
-            
-            // Prefer M4A/AAC for iOS compatibility
-            for stream in sorted {
-                if let type = stream["type"] as? String,
-                   (type.contains("mp4") || type.contains("m4a")),
-                   let urlString = stream["url"] as? String,
-                   let url = URL(string: urlString) {
-                    print("[YouTubeService] Invidious: Selected audio \(type)")
-                    return url
-                }
-            }
-            
-            // Fallback to any audio
-            for stream in sorted {
-                if let urlString = stream["url"] as? String,
-                   let url = URL(string: urlString) {
-                    return url
-                }
-            }
-        }
-        
-        // Fallback to format streams (lower quality but compatible)
-        if let formatStreams = json["formatStreams"] as? [[String: Any]] {
-            for stream in formatStreams {
-                if let urlString = stream["url"] as? String,
-                   let url = URL(string: urlString) {
-                    print("[YouTubeService] Invidious: Using format stream")
-                    return url
-                }
-            }
-        }
-        
-        return nil
-    }
-    
     // MARK: - Thumbnail
     
     func getThumbnail(videoId: String) async -> Data? {
@@ -640,19 +414,12 @@ final class YouTubeService {
         return cleaned.trimmingCharacters(in: .whitespaces)
     }
     
-    // MARK: - Cache Management
-    
-    func clearExpiredCache() {
-        let now = Date()
-        streamCache = streamCache.filter { $0.value.expires > now }
-    }
 }
 
 // MARK: - Errors
 
 enum YouTubeError: LocalizedError {
     case searchFailed
-    case streamExtractionFailed
     case invalidVideoId
     case networkError(String)
     case noResults
@@ -663,8 +430,6 @@ enum YouTubeError: LocalizedError {
         switch self {
         case .searchFailed:
             return "Unable to search right now. Check your internet connection and try again."
-        case .streamExtractionFailed:
-            return "Unable to load this track. The stream may be unavailable. Try another track."
         case .invalidVideoId:
             return "Invalid video ID."
         case .networkError(let message):

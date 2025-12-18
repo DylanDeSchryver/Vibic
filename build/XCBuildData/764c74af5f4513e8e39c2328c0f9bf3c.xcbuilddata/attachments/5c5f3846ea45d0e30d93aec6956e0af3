@@ -1,0 +1,201 @@
+{
+  "" : {
+    "const-values" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Vibic-primary.swiftconstvalues",
+    "dependencies" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Vibic-primary.d",
+    "diagnostics" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Vibic-primary.dia",
+    "emit-module-dependencies" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Vibic-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Vibic-primary-emit-module.dia",
+    "pch" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Vibic-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Vibic-primary.swiftdeps"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/ContentView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/ContentView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/AudioFileManager.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/AudioFileManager.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/AudioFileManager.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/AudioFileManager.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/AudioPlaybackEngine.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/AudioPlaybackEngine.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/AudioPlaybackEngine.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/AudioPlaybackEngine.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/CoreDataManager.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/CoreDataManager.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/CoreDataManager.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/CoreDataManager.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/EqualizerManager.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/EqualizerManager.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/EqualizerManager.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/EqualizerManager.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/ImageCache.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/ImageCache.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/ImageCache.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/ImageCache.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/LibraryController.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LibraryController.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LibraryController.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LibraryController.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/LyricsService.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LyricsService.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LyricsService.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LyricsService.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/MusicRecognitionService.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/MusicRecognitionService.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/MusicRecognitionService.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/MusicRecognitionService.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/NowPlayingShared.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/NowPlayingShared.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/NowPlayingShared.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/NowPlayingShared.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/PlaylistManager.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistManager.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistManager.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistManager.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/ThemeManager.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/ThemeManager.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/ThemeManager.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/ThemeManager.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Core/YouTubeService.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/YouTubeService.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/YouTubeService.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/YouTubeService.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Models/Playlist+Extensions.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Playlist+Extensions.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Playlist+Extensions.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Playlist+Extensions.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Models/Track+Extensions.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Track+Extensions.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Track+Extensions.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Track+Extensions.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/VibicApp.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/VibicApp.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/VibicApp.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/VibicApp.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/EqualizerView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/EqualizerView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/EqualizerView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/EqualizerView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/FileBrowserView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/FileBrowserView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/FileBrowserView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/FileBrowserView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/LazyArtworkView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LazyArtworkView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LazyArtworkView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LazyArtworkView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/LibraryView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LibraryView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LibraryView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LibraryView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/LyricsView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LyricsView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LyricsView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/LyricsView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/MiniPlayerView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/MiniPlayerView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/MiniPlayerView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/MiniPlayerView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/PlayerView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlayerView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlayerView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlayerView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/PlaylistEditorView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistEditorView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistEditorView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistEditorView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/PlaylistView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/QueueView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/QueueView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/QueueView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/QueueView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/SettingsView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/SettingsView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/SettingsView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/SettingsView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/SplashScreenView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/SplashScreenView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/SplashScreenView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/SplashScreenView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/StreamSearchView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/StreamSearchView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/StreamSearchView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/StreamSearchView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/Vibic/Views/TrackRowView.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/TrackRowView.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/TrackRowView.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/TrackRowView.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/DerivedSources/CoreDataGenerated/VibicModel/Playlist+CoreDataClass.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Playlist+CoreDataClass.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Playlist+CoreDataClass.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Playlist+CoreDataClass.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/DerivedSources/CoreDataGenerated/VibicModel/Playlist+CoreDataProperties.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Playlist+CoreDataProperties.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Playlist+CoreDataProperties.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Playlist+CoreDataProperties.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/DerivedSources/CoreDataGenerated/VibicModel/PlaylistItem+CoreDataClass.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistItem+CoreDataClass.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistItem+CoreDataClass.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistItem+CoreDataClass.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/DerivedSources/CoreDataGenerated/VibicModel/PlaylistItem+CoreDataProperties.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistItem+CoreDataProperties.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistItem+CoreDataProperties.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/PlaylistItem+CoreDataProperties.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/DerivedSources/CoreDataGenerated/VibicModel/Track+CoreDataClass.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Track+CoreDataClass.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Track+CoreDataClass.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Track+CoreDataClass.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/DerivedSources/CoreDataGenerated/VibicModel/Track+CoreDataProperties.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Track+CoreDataProperties.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Track+CoreDataProperties.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/Track+CoreDataProperties.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/DerivedSources/CoreDataGenerated/VibicModel/VibicModel+CoreDataModel.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/VibicModel+CoreDataModel.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/VibicModel+CoreDataModel.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/VibicModel+CoreDataModel.o"
+  },
+  "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "index-unit-output-path" : "/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/Vibic.build/Objects-normal/arm64/GeneratedAssetSymbols.o"
+  }
+}

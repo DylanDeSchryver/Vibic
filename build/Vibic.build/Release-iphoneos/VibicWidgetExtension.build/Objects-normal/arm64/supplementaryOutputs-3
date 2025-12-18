@@ -1,0 +1,12 @@
+{
+  "/Users/dylan/Coding Projects/Vibic/VibicWidget/NowPlayingShared.swift" : {
+    "abi-baseline-json" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/VibicWidgetExtension.build/Objects-normal/arm64/VibicWidgetExtension.abi.json",
+    "const-values" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/VibicWidgetExtension.build/Objects-normal/arm64/VibicWidgetExtension-primary.swiftconstvalues",
+    "dependencies" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/VibicWidgetExtension.build/Objects-normal/arm64/VibicWidgetExtension-primary.d",
+    "diagnostics" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/VibicWidgetExtension.build/Objects-normal/arm64/VibicWidgetExtension-primary.dia",
+    "objc-header" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/VibicWidgetExtension.build/Objects-normal/arm64/VibicWidgetExtension-Swift.h",
+    "swiftdoc" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/VibicWidgetExtension.build/Objects-normal/arm64/VibicWidgetExtension.swiftdoc",
+    "swiftmodule" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/VibicWidgetExtension.build/Objects-normal/arm64/VibicWidgetExtension.swiftmodule",
+    "swiftsourceinfo" : "/Users/dylan/Coding Projects/Vibic/build/Vibic.build/Release-iphoneos/VibicWidgetExtension.build/Objects-normal/arm64/VibicWidgetExtension.swiftsourceinfo"
+  }
+}

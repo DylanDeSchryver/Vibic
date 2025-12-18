@@ -1,0 +1,156 @@
+{
+  "" : {
+    "const-values" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTubeKit-primary.swiftconstvalues",
+    "dependencies" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTubeKit-primary.d",
+    "diagnostics" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTubeKit-primary.dia",
+    "emit-module-dependencies" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTubeKit-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTubeKit-primary-emit-module.dia",
+    "pch" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTubeKit-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTubeKit-primary.swiftdeps"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Cipher.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Cipher.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Cipher.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Cipher.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Errors.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Errors.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Errors.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Errors.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Extensions/AsyncCompatibility.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/AsyncCompatibility.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/AsyncCompatibility.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/AsyncCompatibility.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Extensions/Concurrency.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Concurrency.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Concurrency.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Concurrency.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Extensions/Foundation.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Foundation.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Foundation.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Foundation.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Extensions/Lazy.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Lazy.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Lazy.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Lazy.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Extensions/Logging.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Logging.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Logging.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Logging.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Extensions/RegularExpression.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/RegularExpression.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/RegularExpression.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/RegularExpression.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Extensions/Retry.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Retry.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Retry.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Retry.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Extensions/URLSessionDelegates.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/URLSessionDelegates.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/URLSessionDelegates.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/URLSessionDelegates.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Extensions/WebSocket.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/WebSocket.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/WebSocket.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/WebSocket.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Extraction.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Extraction.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Extraction.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Extraction.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/InnerTube.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/InnerTube.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/InnerTube.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/InnerTube.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Models/Codecs.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Codecs.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Codecs.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Codecs.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Models/FileExtension.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/FileExtension.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/FileExtension.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/FileExtension.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Models/ITag.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/ITag.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/ITag.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/ITag.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Models/Livestream.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Livestream.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Livestream.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Livestream.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Models/Method.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Method.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Method.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Method.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Models/Stream.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Stream.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Stream.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Stream.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Models/StreamQuery.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/StreamQuery.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/StreamQuery.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/StreamQuery.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Models/YouTubeMetadata.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTubeMetadata.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTubeMetadata.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTubeMetadata.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Parser.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Parser.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Parser.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Parser.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Remote/AppIdentity.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/AppIdentity.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/AppIdentity.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/AppIdentity.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Remote/Chunking.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Chunking.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Chunking.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/Chunking.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Remote/Models/RemoteStream.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/RemoteStream.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/RemoteStream.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/RemoteStream.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/Remote/RemoteYouTubeClient.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/RemoteYouTubeClient.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/RemoteYouTubeClient.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/RemoteYouTubeClient.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/SignatureSolver.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/SignatureSolver.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/SignatureSolver.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/SignatureSolver.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/Sources/YouTubeKit/YouTube.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTube.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTube.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/YouTube.o"
+  },
+  "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/DerivedSources/resource_bundle_accessor.swift" : {
+    "index-unit-output-path" : "/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/resource_bundle_accessor.o",
+    "llvm-bc" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/resource_bundle_accessor.bc",
+    "object" : "/Users/dylan/Library/Developer/Xcode/DerivedData/Vibic-dgbuhhixnnmucgehecbommdvaimy/SourcePackages/checkouts/YouTubeKit/build/YouTubeKit.build/Release-iphoneos/YouTubeKit.build/Objects-normal/arm64/resource_bundle_accessor.o"
+  }
+}

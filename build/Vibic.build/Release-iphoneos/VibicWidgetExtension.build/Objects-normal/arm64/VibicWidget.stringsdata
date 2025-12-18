@@ -1,0 +1,24 @@
+{
+  "source": "/Users/dylan/Coding Projects/Vibic/VibicWidget/VibicWidget.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Now Playing",
+        "location": {
+          "startingColumn": 35,
+          "startingLine": 229
+        }
+      },
+      {
+        "comment": "",
+        "key": "Shows the currently playing track in Vibic.",
+        "location": {
+          "startingColumn": 22,
+          "startingLine": 230
+        }
+      }
+    ]
+  },
+  "version": 1
+}
