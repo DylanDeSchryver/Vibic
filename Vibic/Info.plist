@@ -27,6 +27,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Vibic uses the microphone to identify songs (ShazamKit).</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
