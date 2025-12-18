@@ -77,27 +77,13 @@ struct StreamSearchView: View {
                 .font(.title2)
                 .fontWeight(.semibold)
             
-            if !hasAPIKey {
-                Text("A YouTube API key is required to search.\nTap the settings button to add your free API key.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 40)
-                
-                Button {
-                    showingSettings = true
-                } label: {
-                    Label("Open Settings", systemImage: "gear")
-                }
-                .buttonStyle(.borderedProminent)
-                .padding(.top, 8)
-            } else {
-                Text("Find songs and stream them instantly.\nTap play to open the embedded player.")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 40)
-            }
+            
+            Text("Find songs and stream them instantly.\nTap play to open the embedded player.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 40)
+            
             
             Spacer()
         }

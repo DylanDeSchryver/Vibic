@@ -1,9 +1,9 @@
 import Foundation
 import AVFoundation
-import CryptoKit
+import ShazamKit
 
 @MainActor
-final class MusicRecognitionService: ObservableObject {
+final class MusicRecognitionService: NSObject, ObservableObject, SHSessionDelegate {
     static let shared = MusicRecognitionService()
     
     @Published var isListening = false
@@ -11,24 +11,10 @@ final class MusicRecognitionService: ObservableObject {
     @Published var errorMessage: String?
     @Published var recordingProgress: Double = 0.0
     
-    private var audioRecorder: AVAudioRecorder?
-    private var recordingTask: Task<Void, Never>?
-    private var tempFileURL: URL?
-    
-    // ACRCloud credentials - stored in UserDefaults, configured via Settings
-    private var acrHost: String {
-        UserDefaults.standard.string(forKey: "acrCloudHost") ?? "identify-us-west-2.acrcloud.com"
-    }
-    private var acrAccessKey: String {
-        UserDefaults.standard.string(forKey: "acrCloudAccessKey") ?? ""
-    }
-    private var acrAccessSecret: String {
-        UserDefaults.standard.string(forKey: "acrCloudAccessSecret") ?? ""
-    }
-    
-    var hasValidCredentials: Bool {
-        !acrAccessKey.isEmpty && !acrAccessSecret.isEmpty
-    }
+    private var session: SHSession?
+    private var audioEngine: AVAudioEngine?
+    private var progressTask: Task<Void, Never>?
+    private var recognitionContinuation: CheckedContinuation<IdentifiedSong?, Error>?
     
     struct IdentifiedSong: Equatable {
         let title: String
@@ -45,21 +31,20 @@ final class MusicRecognitionService: ObservableObject {
         }
     }
     
-    private init() {}
+    private override init() {
+        super.init()
+    }
     
     // MARK: - Start Listening
     
     func startListening() async {
+        // Prevent multiple simultaneous sessions
+        guard !isListening else { return }
+        
         // Reset state
         identifiedSong = nil
         errorMessage = nil
         recordingProgress = 0.0
-        
-        // Check ACRCloud credentials
-        guard hasValidCredentials else {
-            errorMessage = "ACRCloud API keys not configured. Add them in Settings."
-            return
-        }
         
         // Check microphone permission
         let permissionGranted = await requestMicrophonePermission()
@@ -68,227 +53,145 @@ final class MusicRecognitionService: ObservableObject {
             return
         }
         
-        // Configure audio session
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker])
-            try audioSession.setActive(true)
-        } catch {
-            errorMessage = "Failed to configure audio: \(error.localizedDescription)"
-            return
-        }
+        isListening = true
+        print("[MusicRecognition] Starting ShazamKit recognition...")
         
-        // Create temp file for recording
-        let tempDir = FileManager.default.temporaryDirectory
-        tempFileURL = tempDir.appendingPathComponent("music_sample_\(UUID().uuidString).wav")
-        
-        guard let fileURL = tempFileURL else {
-            errorMessage = "Failed to create temp file"
-            return
-        }
-        
-        // Recording settings - WAV format works best with ACRCloud
-        let settings: [String: Any] = [
-            AVFormatIDKey: Int(kAudioFormatLinearPCM),
-            AVSampleRateKey: 8000,
-            AVNumberOfChannelsKey: 1,
-            AVLinearPCMBitDepthKey: 16,
-            AVLinearPCMIsFloatKey: false,
-            AVLinearPCMIsBigEndianKey: false
-        ]
+        // Start progress animation
+        startProgressAnimation()
         
         do {
-            audioRecorder = try AVAudioRecorder(url: fileURL, settings: settings)
-            audioRecorder?.record()
-            isListening = true
-            print("[MusicRecognition] Started recording...")
-            
-            // Record for ~8 seconds with progress updates
-            recordingTask = Task {
-                let recordingDuration: Double = 8.0
-                let updateInterval: Double = 0.1
-                var elapsed: Double = 0.0
-                
-                while elapsed < recordingDuration && !Task.isCancelled {
-                    try? await Task.sleep(nanoseconds: UInt64(updateInterval * 1_000_000_000))
-                    elapsed += updateInterval
-                    await MainActor.run {
-                        recordingProgress = elapsed / recordingDuration
-                    }
-                }
-                
-                if !Task.isCancelled {
-                    await finishRecordingAndIdentify()
-                }
+            let song = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<IdentifiedSong?, Error>) in
+                self.recognitionContinuation = continuation
+                self.startShazamSession()
             }
-        } catch {
-            errorMessage = "Failed to start recording: \(error.localizedDescription)"
-            isListening = false
-        }
-    }
-    
-    private func finishRecordingAndIdentify() async {
-        audioRecorder?.stop()
-        print("[MusicRecognition] Recording stopped, sending to ACRCloud...")
-        
-        guard let fileURL = tempFileURL else {
-            errorMessage = "No recording file found"
-            isListening = false
-            return
-        }
-        
-        do {
-            // Read the audio file
-            let audioData = try Data(contentsOf: fileURL)
-            print("[MusicRecognition] Audio file size: \(audioData.count) bytes")
             
-            // Send to ACRCloud
-            let result = try await identifyWithACRCloud(audioData: audioData)
-            
-            if let song = result {
+            if let song = song {
                 print("[MusicRecognition] Match found: \(song.title) by \(song.artist)")
                 identifiedSong = song
             } else {
-                print("[MusicRecognition] No match found")
                 errorMessage = "Couldn't identify the song. Try again with clearer audio."
             }
         } catch {
             print("[MusicRecognition] Error: \(error)")
-            errorMessage = "Recognition failed: \(error.localizedDescription)"
+            if !Task.isCancelled {
+                errorMessage = "Recognition failed: \(error.localizedDescription)"
+            }
         }
         
         // Cleanup
-        cleanupTempFile()
-        isListening = false
-        recordingProgress = 0.0
-        restoreAudioSession()
+        stopListeningInternal()
     }
     
-    // MARK: - ACRCloud API
+    private func startShazamSession() {
+        // Configure audio session FIRST (before accessing input node)
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker, .allowBluetooth])
+            try audioSession.setActive(true)
+        } catch {
+            recognitionContinuation?.resume(throwing: error)
+            recognitionContinuation = nil
+            return
+        }
+        
+        // Create Shazam session
+        session = SHSession()
+        session?.delegate = self
+        
+        // Setup audio engine
+        audioEngine = AVAudioEngine()
+        
+        guard let audioEngine = audioEngine else {
+            recognitionContinuation?.resume(throwing: NSError(domain: "MusicRecognition", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create audio engine"]))
+            recognitionContinuation = nil
+            return
+        }
+        
+        let inputNode = audioEngine.inputNode
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        
+        // Verify we have a valid format
+        guard recordingFormat.sampleRate > 0 else {
+            recognitionContinuation?.resume(throwing: NSError(domain: "MusicRecognition", code: -2, userInfo: [NSLocalizedDescriptionKey: "Invalid audio format. Sample rate: \(recordingFormat.sampleRate)"]))
+            recognitionContinuation = nil
+            return
+        }
+        
+        print("[MusicRecognition] Recording format: \(recordingFormat.sampleRate) Hz, \(recordingFormat.channelCount) channels")
+        
+        // Install tap to capture audio
+        inputNode.installTap(onBus: 0, bufferSize: 2048, format: recordingFormat) { [weak self] buffer, time in
+            self?.session?.matchStreamingBuffer(buffer, at: time)
+        }
+        
+        // Start audio engine
+        do {
+            try audioEngine.start()
+            print("[MusicRecognition] Audio engine started, listening...")
+        } catch {
+            recognitionContinuation?.resume(throwing: error)
+            recognitionContinuation = nil
+        }
+    }
     
-    private func identifyWithACRCloud(audioData: Data) async throws -> IdentifiedSong? {
-        let httpMethod = "POST"
-        let httpURI = "/v1/identify"
-        let dataType = "audio"
-        let signatureVersion = "1"
-        let timestamp = String(Int(Date().timeIntervalSince1970))
-        
-        // Debug: Log credentials (first few chars only for security)
-        let keyPreview = acrAccessKey.prefix(8)
-        let secretPreview = acrAccessSecret.prefix(8)
-        print("[MusicRecognition] Using host: \(acrHost)")
-        print("[MusicRecognition] Access Key starts with: \(keyPreview)... (length: \(acrAccessKey.count))")
-        print("[MusicRecognition] Access Secret starts with: \(secretPreview)... (length: \(acrAccessSecret.count))")
-        
-        // Create signature
-        let stringToSign = "\(httpMethod)\n\(httpURI)\n\(acrAccessKey)\n\(dataType)\n\(signatureVersion)\n\(timestamp)"
-        let signature = createHMACSHA1Signature(stringToSign: stringToSign, secret: acrAccessSecret)
-        
-        // Create multipart form data
-        let boundary = "Boundary-\(UUID().uuidString)"
-        var body = Data()
-        
-        // Add form fields
-        let fields: [(String, String)] = [
-            ("access_key", acrAccessKey),
-            ("data_type", dataType),
-            ("signature", signature),
-            ("signature_version", signatureVersion),
-            ("timestamp", timestamp),
-            ("sample_bytes", String(audioData.count))
-        ]
-        
-        for (key, value) in fields {
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
-            body.append("\(value)\r\n".data(using: .utf8)!)
-        }
-        
-        // Add audio file
-        body.append("--\(boundary)\r\n".data(using: .utf8)!)
-        body.append("Content-Disposition: form-data; name=\"sample\"; filename=\"sample.wav\"\r\n".data(using: .utf8)!)
-        body.append("Content-Type: audio/wav\r\n\r\n".data(using: .utf8)!)
-        body.append(audioData)
-        body.append("\r\n".data(using: .utf8)!)
-        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-        
-        // Create request
-        let url = URL(string: "https://\(acrHost)/v1/identify")!
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-        request.httpBody = body
-        request.timeoutInterval = 15
-        
-        // Send request
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard let httpResponse = response as? HTTPURLResponse else {
-            throw NSError(domain: "ACRCloud", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response"])
-        }
-        
-        print("[MusicRecognition] ACRCloud response status: \(httpResponse.statusCode)")
-        
-        // Parse response
-        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-        print("[MusicRecognition] ACRCloud response: \(String(data: data, encoding: .utf8) ?? "nil")")
-        
-        guard let status = json?["status"] as? [String: Any],
-              let code = status["code"] as? Int else {
-            throw NSError(domain: "ACRCloud", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid response format"])
-        }
-        
-        // Code 0 = success, 1001 = no result
-        if code == 0, let metadata = json?["metadata"] as? [String: Any],
-           let music = metadata["music"] as? [[String: Any]],
-           let firstMatch = music.first {
+    // MARK: - SHSessionDelegate
+    
+    nonisolated func session(_ session: SHSession, didFind match: SHMatch) {
+        Task { @MainActor in
+            guard let firstItem = match.mediaItems.first else {
+                self.recognitionContinuation?.resume(returning: nil)
+                self.recognitionContinuation = nil
+                return
+            }
             
-            let title = firstMatch["title"] as? String ?? "Unknown Title"
-            let artists = firstMatch["artists"] as? [[String: Any]]
-            let artistName = artists?.first?["name"] as? String ?? "Unknown Artist"
-            
-            return IdentifiedSong(
-                title: title,
-                artist: artistName,
-                artworkURL: nil,
-                appleMusicURL: nil
+            let song = IdentifiedSong(
+                title: firstItem.title ?? "Unknown Title",
+                artist: firstItem.artist ?? "Unknown Artist",
+                artworkURL: firstItem.artworkURL,
+                appleMusicURL: firstItem.appleMusicURL
             )
+            
+            self.recognitionContinuation?.resume(returning: song)
+            self.recognitionContinuation = nil
         }
-        
-        return nil
     }
     
-    private func createHMACSHA1Signature(stringToSign: String, secret: String) -> String {
-        let key = SymmetricKey(data: secret.data(using: .utf8)!)
-        let signature = HMAC<Insecure.SHA1>.authenticationCode(for: stringToSign.data(using: .utf8)!, using: key)
-        return Data(signature).base64EncodedString()
+    nonisolated func session(_ session: SHSession, didNotFindMatchFor signature: SHSignature, error: Error?) {
+        Task { @MainActor in
+            if let error = error {
+                print("[MusicRecognition] No match error: \(error)")
+                self.recognitionContinuation?.resume(throwing: error)
+            } else {
+                print("[MusicRecognition] No match found")
+                self.recognitionContinuation?.resume(returning: nil)
+            }
+            self.recognitionContinuation = nil
+        }
     }
     
     // MARK: - Stop Listening
     
     func stopListening() {
-        recordingTask?.cancel()
-        recordingTask = nil
+        stopListeningInternal()
         
-        audioRecorder?.stop()
-        audioRecorder = nil
+        // Cancel any pending continuation
+        recognitionContinuation?.resume(returning: nil)
+        recognitionContinuation = nil
+    }
+    
+    private func stopListeningInternal() {
+        stopProgressAnimation()
         
-        cleanupTempFile()
+        // Stop audio engine
+        audioEngine?.inputNode.removeTap(onBus: 0)
+        audioEngine?.stop()
+        audioEngine = nil
+        
+        session = nil
         isListening = false
         recordingProgress = 0.0
         
-        restoreAudioSession()
-        print("[MusicRecognition] Stopped listening")
-    }
-    
-    private func cleanupTempFile() {
-        if let url = tempFileURL {
-            try? FileManager.default.removeItem(at: url)
-            tempFileURL = nil
-        }
-    }
-    
-    private func restoreAudioSession() {
+        // Restore audio session for playback
         Task {
             do {
                 let audioSession = AVAudioSession.sharedInstance()
@@ -298,6 +201,31 @@ final class MusicRecognitionService: ObservableObject {
                 print("[MusicRecognition] Failed to restore audio session: \(error)")
             }
         }
+        
+        print("[MusicRecognition] Stopped listening")
+    }
+    
+    // MARK: - Progress Animation
+    
+    private func startProgressAnimation() {
+        progressTask = Task {
+            let maxDuration: Double = 15.0
+            let updateInterval: Double = 0.1
+            var elapsed: Double = 0.0
+            
+            while elapsed < maxDuration && !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: UInt64(updateInterval * 1_000_000_000))
+                elapsed += updateInterval
+                await MainActor.run {
+                    recordingProgress = min(1.0 - exp(-elapsed / 5.0), 0.95)
+                }
+            }
+        }
+    }
+    
+    private func stopProgressAnimation() {
+        progressTask?.cancel()
+        progressTask = nil
     }
     
     // MARK: - Microphone Permission
